@@ -1,215 +1,137 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/config/service_container.dart'; // For dependency injection
 import 'package:movie_app/core/constants/constant.dart';
-import 'package:movie_app/movies/domain/entity/movie_entity.dart';
+import 'package:movie_app/movies/presentation/bloc/movie_bloc.dart';
+import 'package:movie_app/movies/presentation/bloc/movie_event.dart';
+import 'package:movie_app/movies/presentation/bloc/movie_state.dart';
+import 'package:carousel_slider/carousel_slider.dart'; // Import carousel slider package
+import 'package:movie_app/movies/domain/entity/movie_entity.dart'; // Import MovieEntity
 
 class MovieCarouselWidget extends StatelessWidget {
-  final List<MovieEntity> movies;
-  final List<MovieEntity> trendingMovies;
-  final List<MovieEntity> upcomingMovies;
-
-  const MovieCarouselWidget({
-    Key? key,
-    required this.movies,
-    required this.trendingMovies,
-    required this.upcomingMovies,
-  }) : super(key: key);
+  const MovieCarouselWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    double posterHeight = screenSize.height * 0.5;
+    return BlocProvider(
+      create: (context) =>
+          getIt<MovieBloc>()..add(GetMovies()), // Trigger the GetMovies event
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: movies.isNotEmpty
-                ? CarouselSlider.builder(
-                    itemCount: movies.length,
-                    itemBuilder: (context, index, realIndex) {
-                      final movie = movies[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/all-movie-details',
-                            arguments: movie,
-                          );
-                        },
-                        child: Stack(
-                          key: ValueKey(movie.id),
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                '${basePosterUrl}${movie.posterPath}',
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                },
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Center(
-                                        child: Icon(Icons.broken_image)),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 20,
-                              left: 20,
-                              right: 20,
-                              child: Container(
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.6),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        movie.title,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.star,
-                                            color: Colors.amber, size: 18),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          'Ratings: ${movie.voteAverage}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    options: CarouselOptions(
-                      height: posterHeight,
-                      autoPlay: true,
-                      enlargeCenterPage: true,
-                      aspectRatio: 2.0,
-                      autoPlayInterval: const Duration(seconds: 5),
-                    ),
-                  )
-                : const Center(child: Text('No movies available')),
-          ),
-
-          // Trending Section
-          buildMovieSection(
-              context, 'Trending', trendingMovies, '/all-trending-movies'),
-
-          // Upcoming Movies Section
-          buildMovieSection(context, 'Upcoming Movies', upcomingMovies,
-              '/all-upcoming-movies'),
-        ],
+      child:
+          // General Movies Section (Movie Carousel)
+          BlocBuilder<MovieBloc, MovieState>(
+        builder: (context, state) {
+          if (state is MovieLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is MovieDone) {
+            if (state.movies.isEmpty) {
+              return const Center(child: Text('No movies available'));
+            }
+            return MovieCarousel(movies: state.movies); // Pass movies list
+          } else if (state is MovieError) {
+            return Center(child: Text('Error: ${state.message}'));
+          }
+          return const SizedBox.shrink(); // Default empty state
+        },
       ),
     );
   }
+}
 
-  Widget buildMovieSection(BuildContext context, String title,
-      List<MovieEntity> movies, String route) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+@override
+Widget build(BuildContext context) {
+  return BlocProvider(
+    create: (context) =>
+        getIt<MovieBloc>()..add(GetMovies()), // Trigger the GetMovies event
+    child: // General Movies Section (Movie Carousel)
+        BlocBuilder<MovieBloc, MovieState>(builder: (context, state) {
+      if (state is MovieLoading) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (state is MovieDone) {
+        if (state.movies.isEmpty) {
+          return const Center(child: Text('No movies available'));
+        }
+        return MovieCarousel(movies: state.movies); // Pass movies list
+      } else if (state is MovieError) {
+        return Center(child: Text('Error: ${state.message}'));
+      }
+      return const SizedBox.shrink(); // Default empty state
+    }),
+  );
+}
+
+// MovieCarousel widget to display the carousel slider
+class MovieCarousel extends StatelessWidget {
+  final List<MovieEntity> movies;
+
+  const MovieCarousel({super.key, required this.movies});
+
+  @override
+  Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    return Container(
+      height: screenHeight * 0.5, // Set the height explicitly here
+      child: CarouselSlider.builder(
+        itemCount: movies.length,
+        itemBuilder: (context, index, realIndex) {
+          final movie = movies[index];
+          return GestureDetector(
+            onTap: () {
+              // Navigate to movie details page
+              Navigator.pushNamed(context, '/all-movie-details',
+                  arguments: movie);
+            },
+            child: Stack(
+              key: ValueKey(movie.id),
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    '$basePosterUrl${movie.posterPath}',
+                    fit: BoxFit.cover,
+                    width: double
+                        .infinity, // Makes the image stretch to fill the container width
+                    height: double.infinity,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Center(child: Icon(Icons.broken_image)),
                   ),
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  if (movies.isNotEmpty) {
-                    Navigator.pushNamed(
-                      context,
-                      route,
-                      arguments: movies,
-                    );
-                  } else {
-                    print('$title list is empty');
-                  }
-                },
-                child: const Text(
-                  'See More',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue,
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      movie.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          movies.isNotEmpty
-              ? SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: movies.map((movie) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              '/all-movie-details',
-                              arguments: movie,
-                            );
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              '${basePosterUrl}${movie.posterPath}',
-                              width: 120,
-                              height: 180,
-                              fit: BoxFit.cover,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              },
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Center(child: Icon(Icons.broken_image)),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                )
-              : const Center(
-                  child: Text('No movies available in this section')),
-        ],
+              ],
+            ),
+          );
+        },
+        options: CarouselOptions(
+          height: screenHeight * 0.5, // Keep height in CarouselOptions too
+          autoPlay: true,
+          enlargeCenterPage: true,
+          aspectRatio: 2.0,
+          autoPlayInterval: const Duration(seconds: 5),
+        ),
       ),
     );
   }
