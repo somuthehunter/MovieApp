@@ -33,14 +33,14 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       GetTrendingMovies event, Emitter<MovieState> emit) async {
     emit(MovieLoading());
 
-    final _trends = await getMoviesUsecase.getTrendingMovies(apiKey);
+    final trends = await getMoviesUsecase.getTrendingMovies(apiKey);
     // print("From the bloc ${_trends}");
-    if (_trends is DataSuccess<List<MovieEntity>>) {
+    if (trends is DataSuccess<List<MovieEntity>>) {
       emit(MovieDone(
-          movies: [], trendingMovies: _trends.data!, upComingMovies: []));
+          movies: [], trendingMovies: trends.data!, upComingMovies: []));
       // print("In the bloc the trending Movies array is : ${_trends.data}");
-    } else if (_trends is DataFailed) {
-      emit(MovieError(_trends.error.toString()));
+    } else if (trends is DataFailed) {
+      emit(MovieError(trends.error.toString()));
     }
   }
 
@@ -48,14 +48,14 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       UpComingMovies event, Emitter<MovieState> emit) async {
     emit(MovieLoading());
 
-    final _upComing = await getMoviesUsecase.getTrendingMovies(apiKey);
+    final upComing = await getMoviesUsecase.getTrendingMovies(apiKey);
 
-    if (_upComing is DataSuccess<List<MovieEntity>>) {
+    if (upComing is DataSuccess<List<MovieEntity>>) {
       emit(MovieDone(
-          movies: [], trendingMovies: [], upComingMovies: _upComing.data!));
-    } else if (_upComing is DataFailed) {
+          movies: [], trendingMovies: [], upComingMovies: upComing.data!));
+    } else if (upComing is DataFailed) {
       // Corrected from _trends to _upComing
-      emit(MovieError(_upComing.error.toString()));
+      emit(MovieError(upComing.error.toString()));
     }
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/core/constants/constant.dart';
 import 'package:movie_app/movies/domain/entity/movie_entity.dart';
-import 'package:movie_app/movies/presentation/pages/movie_all_details.dart';
+// import 'package:movie_app/movies/presentation/pages/movie_all_details.dart';
 // import 'package:movie_app/movies/presentation/pages/movie_details_screen.dart'; // Import your details screen
 
 class AllTrendingMoviesScreen extends StatelessWidget {

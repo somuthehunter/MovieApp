@@ -1,6 +1,7 @@
 // lib/app_routes.dart
 
 import 'package:flutter/material.dart';
+// import 'package:movie_app/movies/data/data_models/movie_models.dart';
 import 'package:movie_app/movies/domain/entity/movie_entity.dart';
 import 'package:movie_app/movies/presentation/pages/all_trending_movies.dart';
 import 'package:movie_app/movies/presentation/pages/bottomNavigation.dart';

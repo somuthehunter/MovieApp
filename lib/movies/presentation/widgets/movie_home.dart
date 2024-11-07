@@ -25,91 +25,95 @@ class MovieCarouselWidget extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
-            child: CarouselSlider.builder(
-              itemCount: movies.length,
-              itemBuilder: (context, index, realIndex) {
-                final movie = movies[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/all-movie-details',
-                      arguments:
-                          movie, // Pass the selected movie as an argument
-                    );
-                  },
-                  child: Stack(
-                    key: ValueKey(movie.id),
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          '${basePosterUrl}${movie.posterPath}',
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          },
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Center(child: Icon(Icons.broken_image)),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 20,
-                        left: 20,
-                        right: 20,
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  movie.title,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+            child: movies.isNotEmpty
+                ? CarouselSlider.builder(
+                    itemCount: movies.length,
+                    itemBuilder: (context, index, realIndex) {
+                      final movie = movies[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/all-movie-details',
+                            arguments: movie,
+                          );
+                        },
+                        child: Stack(
+                          key: ValueKey(movie.id),
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                '${basePosterUrl}${movie.posterPath}',
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                },
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Center(
+                                        child: Icon(Icons.broken_image)),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 20,
+                              left: 20,
+                              right: 20,
+                              child: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.6),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        movie.title,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.star,
+                                            color: Colors.amber, size: 18),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          'Ratings: ${movie.voteAverage}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  const Icon(Icons.star,
-                                      color: Colors.amber, size: 18),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Ratings: ${movie.voteAverage}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              options: CarouselOptions(
-                height: posterHeight,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                aspectRatio: 2.0,
-                autoPlayInterval: const Duration(seconds: 5),
-              ),
-            ),
+                      );
+                    },
+                    options: CarouselOptions(
+                      height: posterHeight,
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      aspectRatio: 2.0,
+                      autoPlayInterval: const Duration(seconds: 5),
+                    ),
+                  )
+                : const Center(child: Text('No movies available')),
           ),
 
           // Trending Section
@@ -166,41 +170,45 @@ class MovieCarouselWidget extends StatelessWidget {
               ),
             ],
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: movies.map((movie) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/all-movie-details',
-                        arguments: movie,
+          movies.isNotEmpty
+              ? SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: movies.map((movie) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/all-movie-details',
+                              arguments: movie,
+                            );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              '${basePosterUrl}${movie.posterPath}',
+                              width: 120,
+                              height: 180,
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              },
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Center(child: Icon(Icons.broken_image)),
+                            ),
+                          ),
+                        ),
                       );
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        '${basePosterUrl}${movie.posterPath}',
-                        width: 120,
-                        height: 180,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        },
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Center(child: Icon(Icons.broken_image)),
-                      ),
-                    ),
+                    }).toList(),
                   ),
-                );
-              }).toList(),
-            ),
-          ),
+                )
+              : const Center(
+                  child: Text('No movies available in this section')),
         ],
       ),
     );
