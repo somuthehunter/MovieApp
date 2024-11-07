@@ -48,7 +48,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       UpComingMovies event, Emitter<MovieState> emit) async {
     emit(MovieLoading());
 
-    final upComing = await getMoviesUsecase.getTrendingMovies(apiKey);
+    final upComing = await getMoviesUsecase.upComingMovies(apiKey);
 
     if (upComing is DataSuccess<List<MovieEntity>>) {
       emit(MovieDone(

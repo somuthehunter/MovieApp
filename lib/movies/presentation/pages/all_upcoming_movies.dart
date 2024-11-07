@@ -3,17 +3,16 @@ import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/core/constants/constant.dart';
 import 'package:movie_app/movies/domain/entity/movie_entity.dart';
 
-class AllTrendingMoviesScreen extends StatelessWidget {
-  final List<MovieEntity> trendingMovies;
+class AllUpcomingMovies extends StatelessWidget {
+  final List<MovieEntity> upcomingMovies;
 
-  const AllTrendingMoviesScreen({Key? key, required this.trendingMovies})
-      : super(key: key);
+  const AllUpcomingMovies({super.key, required this.upcomingMovies});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("All Trending Movies"),
+        title: const Text("All Upcoming Movies"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -24,9 +23,9 @@ class AllTrendingMoviesScreen extends StatelessWidget {
             crossAxisSpacing: 16.0, // Space between columns
             mainAxisSpacing: 16.0, // Space between rows
           ),
-          itemCount: trendingMovies.length,
+          itemCount: upcomingMovies.length,
           itemBuilder: (context, index) {
-            final movie = trendingMovies[index];
+            final movie = upcomingMovies[index];
             return GestureDetector(
               onTap: () {
                 Navigator.pushNamed(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/movies/presentation/widgets/movie_home.dart'; // Import MovieCarouselWidget
-import 'package:movie_app/movies/presentation/widgets/trending_movies_widget.dart'; // Import TrendingMoviesWidget
+import 'package:movie_app/movies/presentation/widgets/trending_movies_widget.dart';
+import 'package:movie_app/movies/presentation/widgets/upcoming_movie_section.dart'; // Import TrendingMoviesWidget
 
 class MovieScreen extends StatelessWidget {
   const MovieScreen({super.key});
@@ -16,6 +17,8 @@ class MovieScreen extends StatelessWidget {
 
             // Trending Movies Section
             TrendingMoviesWidget(), // Direct call to TrendingMoviesWidget
+            //for upcoming movies
+            UpComingMoviesWidget(),
           ],
         ),
       ),

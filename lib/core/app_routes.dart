@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 // import 'package:movie_app/movies/data/data_models/movie_models.dart';
 import 'package:movie_app/movies/domain/entity/movie_entity.dart';
+import 'package:movie_app/movies/presentation/bloc/movie_event.dart';
 import 'package:movie_app/movies/presentation/pages/all_trending_movies.dart';
+import 'package:movie_app/movies/presentation/pages/all_upcoming_movies.dart';
 import 'package:movie_app/movies/presentation/pages/bottomNavigation.dart';
 import 'package:movie_app/movies/presentation/pages/movie_all_details.dart';
 // import 'package:movie_app/movies/presentation/screens/all_trending_movies_screen.dart';
@@ -34,9 +36,11 @@ class AppRoutes {
           builder: (context) => MovieDetailsScreen(movie: movie),
         );
       case upcomingMovies:
-        final movie = settings.arguments as MovieEntity; // Retrieve the movie
+        final upComingMovies =
+            settings.arguments as List<MovieEntity>; // Retrieve the movie
         return MaterialPageRoute(
-          builder: (context) => MovieDetailsScreen(movie: movie),
+          builder: (context) =>
+              AllUpcomingMovies(upcomingMovies: upComingMovies),
         );
       default:
         return MaterialPageRoute(

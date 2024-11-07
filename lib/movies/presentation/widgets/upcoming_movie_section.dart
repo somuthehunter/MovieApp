@@ -8,20 +8,22 @@ import 'package:movie_app/movies/presentation/bloc/movie_bloc.dart';
 import 'package:movie_app/movies/presentation/bloc/movie_event.dart';
 import 'package:movie_app/movies/presentation/bloc/movie_state.dart';
 
-class TrendingMoviesWidget extends StatelessWidget {
-  const TrendingMoviesWidget({super.key});
+class UpComingMoviesWidget extends StatelessWidget {
+  const UpComingMoviesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<MovieBloc>()..add(GetTrendingMovies()),
+      create: (context) => getIt<MovieBloc>()
+        ..add(UpComingMovies()), // Event for fetching upcoming movies
       child: BlocBuilder<MovieBloc, MovieState>(
         builder: (context, state) {
           if (state is MovieLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is MovieDone) {
-            if (state.trendingMovies.isEmpty) {
-              return const Center(child: Text('No trending movies available'));
+            print("Upcoming Movies : ${state.upComingMovies}");
+            if (state.upComingMovies.isEmpty) {
+              return const Center(child: Text('No upcoming movies available'));
             }
 
             return Padding(
@@ -35,7 +37,7 @@ class TrendingMoviesWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Trending Movies',
+                          'Upcoming Movies',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -44,8 +46,9 @@ class TrendingMoviesWidget extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {
                             Navigator.pushNamed(
-                                context, AppRoutes.allTrendingMovies,
-                                arguments: state.trendingMovies);
+                                context, AppRoutes.upcomingMovies,
+                                arguments: state
+                                    .upComingMovies); // Navigates to the details screen
                           },
                           style: ElevatedButton.styleFrom(
                             side: const BorderSide(color: Colors.blue),
@@ -60,8 +63,9 @@ class TrendingMoviesWidget extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: state.trendingMovies.map((movie) {
-                        return buildMovieThumbnail(context, movie);
+                      children: state.upComingMovies.map((movie) {
+                        return buildMovieThumbnail(
+                            context, movie); // Builds movie thumbnails
                       }).toList(),
                     ),
                   ),
@@ -85,7 +89,7 @@ class TrendingMoviesWidget extends StatelessWidget {
           Navigator.pushNamed(
             context,
             AppRoutes.movieDetails,
-            arguments: movie, // Pass a single movie entity
+            arguments: movie, // Pass the single movie entity
           );
         },
         child: ClipRRect(
