@@ -3,31 +3,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/config/service_container.dart';
 import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/core/constants/constant.dart';
-import 'package:movie_app/movies/domain/entity/movie_entity.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_bloc.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_event.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_state.dart';
+import 'package:movie_app/movies/domain/entity/tv_show_entity.dart';
 
-class UpComingMoviesWidget extends StatelessWidget {
-  const UpComingMoviesWidget({super.key});
+import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_bloc.dart';
+import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_event.dart';
+import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_state.dart';
+
+class TvshowsWidget extends StatelessWidget {
+  const TvshowsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<MovieBloc>()
-        ..add(UpComingMovies()), // Event for fetching upcoming movies
-      child: BlocBuilder<MovieBloc, MovieState>(
+      create: (context) => getIt<TvShowBloc>()..add(GetTvShows()),
+      child: BlocBuilder<TvShowBloc, TvShowState>(
         builder: (context, state) {
-          if (state is MovieLoading) {
+          if (state is TvShowLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is MovieDone) {
-            print("Upcoming Movies : ${state.upComingMovies}");
-            if (state.upComingMovies.isEmpty) {
-              return const Center(child: Text('No upcoming movies available'));
+          } else if (state is TvShowDone) {
+            if (state.tvShows.isEmpty) {
+              return const Center(child: Text('Web Series are on the way. Please Wait'));
             }
 
             return Padding(
-              padding: const EdgeInsets.only(bottom: 5.0),
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -37,7 +36,7 @@ class UpComingMoviesWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Upcoming Movies',
+                          'Web Series',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -46,9 +45,8 @@ class UpComingMoviesWidget extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {
                             Navigator.pushNamed(
-                                context, AppRoutes.upcomingMovies,
-                                arguments: state
-                                    .upComingMovies); // Navigates to the details screen
+                                context, AppRoutes.allWebSeries,
+                                arguments: state.tvShows);
                           },
                           style: ElevatedButton.styleFrom(
                             side: const BorderSide(color: Colors.blue),
@@ -63,17 +61,16 @@ class UpComingMoviesWidget extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: state.upComingMovies.map((movie) {
-                        return buildMovieThumbnail(
-                            context, movie); // Builds movie thumbnails
+                      children: state.tvShows.map((movie) {
+                        return buildMovieThumbnail(context, movie);
                       }).toList(),
                     ),
                   ),
                 ],
               ),
             );
-          } else if (state is MovieError) {
-            return Center(child: Text('Error: ${state.message}'));
+          } else if (state is TvShowError) {
+            return Center(child: Text('Error: ${state.error}'));
           }
           return const SizedBox.shrink();
         },
@@ -81,7 +78,7 @@ class UpComingMoviesWidget extends StatelessWidget {
     );
   }
 
-  Widget buildMovieThumbnail(BuildContext context, MovieEntity movie) {
+  Widget buildMovieThumbnail(BuildContext context, TVShow movie) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: GestureDetector(
@@ -89,7 +86,7 @@ class UpComingMoviesWidget extends StatelessWidget {
           Navigator.pushNamed(
             context,
             AppRoutes.movieDetails,
-            arguments: movie, // Pass the single movie entity
+            arguments: movie, // Pass a single movie entity
           );
         },
         child: ClipRRect(

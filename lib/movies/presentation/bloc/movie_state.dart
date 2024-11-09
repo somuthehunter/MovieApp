@@ -17,10 +17,11 @@ class MovieDone extends MovieState {
   final List<MovieEntity> trendingMovies;
   final List<MovieEntity> upComingMovies;
 
-  MovieDone(
-      {required this.movies,
-      required this.trendingMovies,
-      required this.upComingMovies});
+  MovieDone({
+    required this.movies,
+    required this.trendingMovies,
+    required this.upComingMovies,
+  });
 
   @override
   List<Object?> get props => [movies, trendingMovies, upComingMovies];

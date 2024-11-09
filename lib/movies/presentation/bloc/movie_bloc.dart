@@ -23,7 +23,10 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
     if (result is DataSuccess<List<MovieEntity>>) {
       emit(MovieDone(
-          movies: result.data!, trendingMovies: [], upComingMovies: []));
+        movies: result.data!,
+        trendingMovies: [],
+        upComingMovies: [],
+      ));
     } else if (result is DataFailed) {
       emit(MovieError(result.error.toString()));
     }
@@ -37,7 +40,10 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     // print("From the bloc ${_trends}");
     if (trends is DataSuccess<List<MovieEntity>>) {
       emit(MovieDone(
-          movies: [], trendingMovies: trends.data!, upComingMovies: []));
+        movies: [],
+        trendingMovies: trends.data!,
+        upComingMovies: [],
+      ));
       // print("In the bloc the trending Movies array is : ${_trends.data}");
     } else if (trends is DataFailed) {
       emit(MovieError(trends.error.toString()));
@@ -52,7 +58,10 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
     if (upComing is DataSuccess<List<MovieEntity>>) {
       emit(MovieDone(
-          movies: [], trendingMovies: [], upComingMovies: upComing.data!));
+        movies: [],
+        trendingMovies: [],
+        upComingMovies: upComing.data!,
+      ));
     } else if (upComing is DataFailed) {
       // Corrected from _trends to _upComing
       emit(MovieError(upComing.error.toString()));

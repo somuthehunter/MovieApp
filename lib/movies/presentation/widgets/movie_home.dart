@@ -69,7 +69,7 @@ class MovieCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    return Container(
+    return SizedBox(
       height: screenHeight * 0.5, // Set the height explicitly here
       child: CarouselSlider.builder(
         itemCount: movies.length,
