@@ -48,4 +48,15 @@ class MoviesApiService {
     );
     return response;
   }
+
+  Future<Response> searchMovies(String apiKey, String query) async {
+    final response = await _dio.get(
+      '${apiBaseUrl}search/movie',
+      queryParameters: {
+        'api_key': apiKey,
+        'query': query,
+      },
+    );
+    return response;
+  }
 }

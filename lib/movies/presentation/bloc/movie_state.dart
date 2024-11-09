@@ -37,3 +37,21 @@ class MovieError extends MovieState {
 
   get message => null;
 }
+
+class MovieSearchSuccess extends MovieState {
+  final List<MovieEntity> searchResults;
+
+  MovieSearchSuccess(this.searchResults);
+
+  @override
+  List<Object?> get props => [searchResults];
+}
+
+class MovieSearchError extends MovieState {
+  final String error;
+
+  MovieSearchError(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}

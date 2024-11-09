@@ -21,4 +21,10 @@ class GetMoviesUsecase {
   Future<DataState<List<MovieEntity>>> upComingMovies(String apiKey) {
     return repository.upComingMovies(apiKey);
   }
+
+  //searching movies
+  Future<DataState<List<MovieEntity>>> searchMovies(
+      String apiKey, String query) {
+    return repository.searchMovies(apiKey, query);
+  }
 }

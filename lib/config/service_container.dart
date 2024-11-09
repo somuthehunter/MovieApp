@@ -12,8 +12,6 @@ import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 
-
-
 void setup() {
   // Register Dio
   getIt.registerLazySingleton<Dio>(() => Dio());

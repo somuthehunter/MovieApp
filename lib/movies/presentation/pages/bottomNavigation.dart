@@ -5,12 +5,13 @@ import 'package:movie_app/movies/presentation/bloc/navigation/navigation_bloc.da
 import 'package:movie_app/movies/presentation/bloc/navigation/navigation_event.dart';
 import 'package:movie_app/movies/presentation/bloc/navigation/navigation_state.dart';
 import 'package:movie_app/movies/presentation/pages/movie_homeScreen.dart';
+import 'package:movie_app/movies/presentation/pages/search_screen.dart';
 // import 'package:movie_app/movies/presentation/widgets/movie_screen.dart';
 
 class Navigation extends StatelessWidget {
   final List<Widget> pages = [
     MovieScreen(), // Main MovieScreen widget with movie posters and trending movies
-    const Center(child: Text("Search")), // Placeholder for Search Screen
+    SearchScreen(), // Placeholder for Search Screen
     const Center(child: Text("Favorites")), // Placeholder for Favorites Screen
   ];
 
