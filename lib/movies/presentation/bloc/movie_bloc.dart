@@ -10,85 +10,65 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final GetMoviesUsecase getMoviesUsecase;
 
   MovieBloc(this.getMoviesUsecase) : super(MovieLoading()) {
-    on<GetMovies>(_onGetMovies);
-    on<GetTrendingMovies>(_onGetTrendingMovies);
-    on<UpComingMovies>(_onUpComingMovies);
-    on<SearchMovies>(_onSearchMovies);
+    on<GetMovies>((event, emit) => _fetchMovies(emit));
+    on<GetTrendingMovies>((event, emit) => _fetchTrendingMovies(emit));
+    on<UpComingMovies>((event, emit) => _fetchUpcomingMovies(emit));
+    on<SearchMovies>((event, emit) => _fetchSearchMovies(event, emit));
   }
 
-  Future<void> _onGetMovies(GetMovies event, Emitter<MovieState> emit) async {
-    emit(MovieLoading());
-
-    final result =
-        await getMoviesUsecase.getMovies(apiKey); // Corrected to use call()
-
-    if (result is DataSuccess<List<MovieEntity>>) {
-      emit(MovieDone(
-        movies: result.data!,
-        trendingMovies: [],
-        upComingMovies: [],
-      ));
-    } else if (result is DataFailed) {
-      emit(MovieError(result.error.toString()));
-    }
+  Future<void> _fetchMovies(Emitter<MovieState> emit) async {
+    await _fetchData(
+      emit,
+      fetchAction: () => getMoviesUsecase.getMovies(apiKey),
+      onSuccess: (movies) =>
+          MovieDone(movies: movies, trendingMovies: [], upComingMovies: []),
+    );
   }
 
-  Future<void> _onGetTrendingMovies(
-      GetTrendingMovies event, Emitter<MovieState> emit) async {
-    emit(MovieLoading());
-
-    final trends = await getMoviesUsecase.getTrendingMovies(apiKey);
-    // print("From the bloc ${_trends}");
-    if (trends is DataSuccess<List<MovieEntity>>) {
-      emit(MovieDone(
-        movies: [],
-        trendingMovies: trends.data!,
-        upComingMovies: [],
-      ));
-      // print("In the bloc the trending Movies array is : ${_trends.data}");
-    } else if (trends is DataFailed) {
-      emit(MovieError(trends.error.toString()));
-    }
+  Future<void> _fetchTrendingMovies(Emitter<MovieState> emit) async {
+    await _fetchData(
+      emit,
+      fetchAction: () => getMoviesUsecase.getTrendingMovies(apiKey),
+      onSuccess: (trendingMovies) => MovieDone(
+          movies: [], trendingMovies: trendingMovies, upComingMovies: []),
+    );
   }
 
-  Future<void> _onUpComingMovies(
-      UpComingMovies event, Emitter<MovieState> emit) async {
-    emit(MovieLoading());
-
-    final upComing = await getMoviesUsecase.upComingMovies(apiKey);
-
-    if (upComing is DataSuccess<List<MovieEntity>>) {
-      emit(MovieDone(
-        movies: [],
-        trendingMovies: [],
-        upComingMovies: upComing.data!,
-      ));
-    } else if (upComing is DataFailed) {
-      // Corrected from _trends to _upComing
-      emit(MovieError(upComing.error.toString()));
-    }
+  Future<void> _fetchUpcomingMovies(Emitter<MovieState> emit) async {
+    await _fetchData(
+      emit,
+      fetchAction: () => getMoviesUsecase.upComingMovies(apiKey),
+      onSuccess: (upComingMovies) => MovieDone(
+          movies: [], trendingMovies: [], upComingMovies: upComingMovies),
+    );
   }
 
-
-  Future<void> _onSearchMovies(
+  Future<void> _fetchSearchMovies(
       SearchMovies event, Emitter<MovieState> emit) async {
+    await _fetchData(
+      emit,
+      fetchAction: () => getMoviesUsecase.searchMovies(apiKey, event.query),
+      onSuccess: (movies) =>
+          MovieDone(movies: movies, trendingMovies: [], upComingMovies: []),
+    );
+  }
+
+  /// Generalized data fetching method to handle data retrieval and error management.
+  Future<void> _fetchData(
+    Emitter<MovieState> emit, {
+    required Future<DataState<List<MovieEntity>>> Function() fetchAction,
+    required MovieState Function(List<MovieEntity> data) onSuccess,
+  }) async {
     emit(MovieLoading());
-
     try {
-      final result = await getMoviesUsecase.searchMovies(apiKey, event.query);
-
+      final result = await fetchAction();
       if (result is DataSuccess<List<MovieEntity>>) {
-        emit(MovieDone(
-          movies: result.data!,
-          trendingMovies: [],
-          upComingMovies: [],
-        ));
+        emit(onSuccess(result.data!));
       } else if (result is DataFailed) {
         emit(MovieError(result.error.toString()));
       }
     } catch (e) {
-      emit(MovieError('Search failed: $e'));
+      emit(MovieError('An unexpected error occurred: $e'));
     }
   }
-  
 }

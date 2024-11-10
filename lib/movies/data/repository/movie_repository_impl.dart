@@ -2,10 +2,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:movie_app/config/data_state.dart';
 import 'package:movie_app/movies/data/data_models/movie_models.dart';
-
 import 'package:movie_app/movies/data/resources/movies_api_service.dart';
 import 'package:movie_app/movies/domain/entity/movie_entity.dart';
-
 import 'package:movie_app/movies/domain/repository/movie_repository.dart';
 
 class MovieRepositoryImpl extends MovieRepository {
@@ -15,160 +13,65 @@ class MovieRepositoryImpl extends MovieRepository {
 
   @override
   Future<DataState<List<MovieEntity>>> getMovies(String apiKey) async {
-    try {
-      final httpResponse = await _moviesApiService.getMovies(apiKey);
-
-      if (httpResponse.statusCode == HttpStatus.ok) {
-        final results = httpResponse.data['results'] as List<dynamic>;
-
-        // Map the JSON response to MovieModel instances
-        List<MovieEntity> movies = results.map((json) {
-          // print('JSON item before mapping: $json'); // Debugging print
-          return MovieModel.fromJson(json as Map<String, dynamic>);
-        }).toList();
-
-        return DataSuccess(movies);
-      } else {
-        return DataFailed(
-          DioException(
-            requestOptions: httpResponse.requestOptions,
-            response: httpResponse,
-            error: "Failed to load movies: ${httpResponse.statusMessage}",
-            type: DioExceptionType.badResponse,
-          ),
-        );
-      }
-    } on DioException catch (e) {
-      return DataFailed(e);
-    } catch (e) {
-      return DataFailed(
-        DioException(
-          error: e.toString(),
-          requestOptions: RequestOptions(path: ''),
-        ),
-      );
-    }
+    return await _fetchMovies(
+      fetchAction: () => _moviesApiService.getMovies(apiKey),
+      errorMessage: "Failed to load movies",
+    );
   }
 
   @override
   Future<DataState<List<MovieEntity>>> getTrendingMovies(String apiKey) async {
-    try {
-      // Make the API call and print the request details
-      print("getTrendingMovies called");
-      final response = await _moviesApiService.getTrendingMovies(apiKey);
-      print(
-          "API call made to get trending movies. URL: ${response.requestOptions.uri}");
-
-      // Check the response status code
-      if (response.statusCode == HttpStatus.ok) {
-        // If successful, process the results
-        final resultsTrends = response.data['results'] as List<dynamic>;
-
-        List<MovieEntity> trendingMovies = resultsTrends.map((json) {
-          return MovieModel.fromJson(json as Map<String, dynamic>);
-        }).toList();
-
-        // Log the trending movies
-
-        return DataSuccess(trendingMovies);
-      } else {
-        return DataFailed(
-          DioException(
-            requestOptions: response.requestOptions,
-            response: response,
-            error: "Failed to load trending movies: ${response.statusMessage}",
-            type: DioExceptionType.badResponse,
-          ),
-        );
-      }
-    } on DioException catch (e) {
-      // Handle Dio specific exceptions
-      print("DioException occurred: ${e.message}");
-      return DataFailed(e);
-    } catch (e) {
-      // Handle any other exceptions
-      print("An error occurred: ${e.toString()}");
-      return DataFailed(
-        DioException(
-          error: e.toString(),
-          requestOptions: RequestOptions(path: ''),
-        ),
-      );
-    }
+    return await _fetchMovies(
+      fetchAction: () => _moviesApiService.getTrendingMovies(apiKey),
+      errorMessage: "Failed to load trending movies",
+    );
   }
 
   @override
   Future<DataState<List<MovieEntity>>> upComingMovies(String apiKey) async {
-    try {
-      // Make the API call and print the request details
-      // print("getTrendingMovies called");
-      final response = await _moviesApiService.upComingMovies(apiKey);
-      // print(
-      //     "API call made to get trending movies. URL: ${response.requestOptions.uri}");
-
-      // Check the response status code
-      if (response.statusCode == HttpStatus.ok) {
-        // If successful, process the results
-        final results_upcoming = response.data['results'] as List<dynamic>;
-        // print("Response received successfully: ${response.data}");
-
-        List<MovieEntity> upcomingMovies = results_upcoming.map((json) {
-          return MovieModel.fromJson(json as Map<String, dynamic>);
-        }).toList();
-
-        return DataSuccess(upcomingMovies);
-      } else {
-        // Handle the case where the response status is not OK
-
-        return DataFailed(
-          DioException(
-            requestOptions: response.requestOptions,
-            response: response,
-            error: "Failed to load trending movies: ${response.statusMessage}",
-            type: DioExceptionType.badResponse,
-          ),
-        );
-      }
-    } on DioException catch (e) {
-      // Handle Dio specific exceptions
-
-      return DataFailed(e);
-    } catch (e) {
-      // Handle any other exceptions
-
-      return DataFailed(
-        DioException(
-          error: e.toString(),
-          requestOptions: RequestOptions(path: ''),
-        ),
-      );
-    }
+    return await _fetchMovies(
+      fetchAction: () => _moviesApiService.upComingMovies(apiKey),
+      errorMessage: "Failed to load upcoming movies",
+    );
   }
 
   @override
   Future<DataState<List<MovieEntity>>> searchMovies(
       String apiKey, String query) async {
+    return await _fetchMovies(
+      fetchAction: () => _moviesApiService.searchMovies(apiKey, query),
+      errorMessage: "Failed to load search results",
+    );
+  }
+
+  /// Centralized method for handling API calls, responses, and error handling.
+  Future<DataState<List<MovieEntity>>> _fetchMovies({
+    required Future<Response> Function() fetchAction,
+    required String errorMessage,
+  }) async {
     try {
-      final response = await _moviesApiService.searchMovies(apiKey, query);
+      final response = await fetchAction();
+
       if (response.statusCode == HttpStatus.ok) {
         final results = response.data['results'] as List<dynamic>;
-        // print("Response received successfully: ${response.data}");
 
-        List<MovieEntity> searchQuery = results.map((json) {
-          return MovieModel.fromJson(json as Map<String, dynamic>);
-        }).toList();
+        List<MovieEntity> movies = results
+            .map((json) => MovieModel.fromJson(json as Map<String, dynamic>))
+            .toList();
 
-        return DataSuccess(searchQuery);
+        return DataSuccess(movies);
       } else {
         return DataFailed(
           DioException(
             requestOptions: response.requestOptions,
             response: response,
-            error: "Failed to load trending movies: ${response.statusMessage}",
+            error: "$errorMessage: ${response.statusMessage}",
             type: DioExceptionType.badResponse,
           ),
         );
       }
+    } on DioException catch (e) {
+      return DataFailed(e);
     } catch (e) {
       return DataFailed(
         DioException(
