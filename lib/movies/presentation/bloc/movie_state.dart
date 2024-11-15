@@ -4,10 +4,6 @@ import 'package:movie_app/movies/domain/entity/movie_entity.dart';
 abstract class MovieState extends Equatable {
   @override
   List<Object?> get props => [];
-
-  // get movies => null;
-
-  // get movie => null;
 }
 
 class MovieLoading extends MovieState {}
@@ -34,8 +30,6 @@ class MovieError extends MovieState {
 
   @override
   List<Object?> get props => [error];
-
-  get message => null;
 }
 
 class MovieSearchSuccess extends MovieState {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/config/service_container.dart';
-import 'package:movie_app/core/constants/constant.dart';
 import 'package:movie_app/movies/presentation/bloc/movie_bloc.dart';
 import 'package:movie_app/movies/presentation/bloc/movie_event.dart';
 import 'package:movie_app/movies/presentation/bloc/movie_state.dart';
@@ -66,69 +65,46 @@ class SearchScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16.0),
-            // BlocProvider scoped for this widget using GetIt to get MovieBloc instance
-            BlocProvider(
-              create: (context) => getIt<MovieBloc>(),
-              child: BlocBuilder<MovieBloc, MovieState>(
-                builder: (context, state) {
-                  // if (state is MovieLoading) {
-                  //   return const Center(child: CircularProgressIndicator());
-                  if (state is MovieError) {
-                    return Center(
-                        child: Text(state.error,
-                            style: TextStyle(color: Colors.red)));
-                  } else if (state is MovieSearchSuccess) {
-                    if (state.searchResults.isEmpty) {
-                      return const Center(
-                          child: Text('No results found',
-                              style: TextStyle(fontSize: 18)));
-                    }
-
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: state.searchResults.length,
-                        itemBuilder: (context, index) {
-                          final movie = state.searchResults[index];
-                          return Card(
-                            margin: const EdgeInsets.only(bottom: 12.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            elevation: 4,
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.all(10),
-                              leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  '$basePosterUrl${movie.posterPath}' ??
-                                      '', // Assuming 'posterUrl' is in your model
-                                  height: 100,
-                                  width: 75,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              title: Text(
-                                movie.title,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                movie.overview,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
+            BlocBuilder<MovieBloc, MovieState>(
+              builder: (context, state) {
+                if (state is MovieLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is MovieError) {
+                  return Center(
+                    child: Text(state.error,
+                        style: const TextStyle(color: Colors.red)),
+                  );
+                } else if (state is MovieSearchSuccess) {
+                  if (state.searchResults.isEmpty) {
+                    return const Center(
+                        child: Text('No results found',
+                            style: TextStyle(fontSize: 18)));
                   }
-                  return const SizedBox.shrink();
-                },
-              ),
+
+                  return ListView.builder(
+                    shrinkWrap:
+                        true, // Allows the ListView to take only the space it needs
+                    itemCount: state.searchResults.length,
+                    itemBuilder: (context, index) {
+                      final movie = state.searchResults[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: ListTile(
+                          title: Text(
+                            movie.title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+                return const SizedBox
+                    .shrink(); // Return an empty widget by default
+              },
             ),
           ],
         ),

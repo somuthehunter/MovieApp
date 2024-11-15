@@ -69,7 +69,7 @@ class TrendingMoviesWidget extends StatelessWidget {
               ),
             );
           } else if (state is MovieError) {
-            return Center(child: Text('Error: ${state.message}'));
+            return Center(child: Text('Error: ${state.error}'));
           }
           return const SizedBox.shrink();
         },

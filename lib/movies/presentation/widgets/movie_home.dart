@@ -29,7 +29,7 @@ class MovieCarouselWidget extends StatelessWidget {
             }
             return MovieCarousel(movies: state.movies); // Pass movies list
           } else if (state is MovieError) {
-            return Center(child: Text('Error: ${state.message}'));
+            return Center(child: Text('Error: ${state.error}'));
           }
           return const SizedBox.shrink(); // Default empty state
         },

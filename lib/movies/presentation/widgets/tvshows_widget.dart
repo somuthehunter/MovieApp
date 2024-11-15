@@ -22,7 +22,8 @@ class TvshowsWidget extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is TvShowDone) {
             if (state.tvShows.isEmpty) {
-              return const Center(child: Text('Web Series are on the way. Please Wait'));
+              return const Center(
+                  child: Text('Web Series are on the way. Please Wait'));
             }
 
             return Padding(
@@ -44,8 +45,7 @@ class TvshowsWidget extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(
-                                context, AppRoutes.allWebSeries,
+                            Navigator.pushNamed(context, AppRoutes.allWebSeries,
                                 arguments: state.tvShows);
                           },
                           style: ElevatedButton.styleFrom(
