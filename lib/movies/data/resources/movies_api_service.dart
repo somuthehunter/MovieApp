@@ -57,6 +57,7 @@ class MoviesApiService {
         'query': query,
       },
     );
+    // print("search response : ${response}");
     return response;
   }
 }

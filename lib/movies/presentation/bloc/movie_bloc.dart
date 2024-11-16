@@ -52,10 +52,12 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     try {
       // Fetch search results from the use case
       final result = await getMoviesUsecase.searchMovies(apiKey, event.query);
-
+      print(result);
       if (result is DataSuccess<List<MovieEntity>>) {
         // If search is successful, emit the success state with search results
+        // print(result);
         emit(MovieSearchSuccess(result.data!));
+        // print("Emitting MovieSearchSuccess with results: ${result.data!}");
       } else if (result is DataFailed) {
         // Emit error state in case of failure
         emit(MovieSearchError(result.error.toString()));
@@ -85,4 +87,3 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     }
   }
 }
-

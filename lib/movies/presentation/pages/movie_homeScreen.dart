@@ -22,11 +22,11 @@ class MovieScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             // Drawer Header (optional)
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: const Text(
+              child: Text(
                 'Menu',
                 style: TextStyle(
                   color: Colors.white,

@@ -85,7 +85,7 @@ class TvshowsWidget extends StatelessWidget {
         onTap: () {
           Navigator.pushNamed(
             context,
-            AppRoutes.movieDetails,
+            AppRoutes.webSeriesDetails,
             arguments: movie, // Pass a single movie entity
           );
         },

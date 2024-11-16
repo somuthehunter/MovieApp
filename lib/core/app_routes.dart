@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/movies/data/data_models/movie_models.dart';
 import 'package:movie_app/movies/domain/entity/movie_entity.dart';
 import 'package:movie_app/movies/domain/entity/tv_show_entity.dart';
 import 'package:movie_app/movies/presentation/pages/all_trending_movies.dart';
@@ -6,6 +7,7 @@ import 'package:movie_app/movies/presentation/pages/all_tv_show.dart';
 import 'package:movie_app/movies/presentation/pages/all_upcoming_movies.dart';
 import 'package:movie_app/movies/presentation/pages/bottomNavigation.dart';
 import 'package:movie_app/movies/presentation/pages/movie_all_details.dart';
+import 'package:movie_app/movies/presentation/pages/search_results_screen.dart';
 import 'package:movie_app/movies/presentation/pages/show_details.dart';
 
 class AppRoutes {
@@ -15,6 +17,7 @@ class AppRoutes {
   static const String upcomingMovies = '/all-upcoming-movies';
   static const String allWebSeries = '/all-web-series';
   static const String webSeriesDetails = '/series-details';
+  static const String searchResult = '/search-results';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -50,6 +53,11 @@ class AppRoutes {
         final shows = settings.arguments as TVShow;
         return MaterialPageRoute(
           builder: (context) => ShowDetailScreen(shows: shows),
+        );
+      case searchResult:
+        final results = settings.arguments as List<MovieEntity>;
+        return MaterialPageRoute(
+          builder: (context) => SearchResultsScreen(results: results),
         );
       default:
         return MaterialPageRoute(
