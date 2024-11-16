@@ -13,8 +13,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     on<GetMovies>((event, emit) => _fetchMovies(emit));
     on<GetTrendingMovies>((event, emit) => _fetchTrendingMovies(emit));
     on<UpComingMovies>((event, emit) => _fetchUpcomingMovies(emit));
-    on<SearchMovies>((event, emit) =>
-        _fetchSearchMovies(event, emit)); // Handle SearchMovies event
+    on<SearchMovies>((event, emit) => _fetchSearchMovies(event, emit));
   }
 
   Future<void> _fetchMovies(Emitter<MovieState> emit) async {
@@ -52,12 +51,12 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     try {
       // Fetch search results from the use case
       final result = await getMoviesUsecase.searchMovies(apiKey, event.query);
-      print(result);
+      // print(result);
       if (result is DataSuccess<List<MovieEntity>>) {
         // If search is successful, emit the success state with search results
         // print(result);
         emit(MovieSearchSuccess(result.data!));
-        // print("Emitting MovieSearchSuccess with results: ${result.data!}");
+        print("Emitting MovieSearchSuccess with results: ${result.data!}");
       } else if (result is DataFailed) {
         // Emit error state in case of failure
         emit(MovieSearchError(result.error.toString()));

@@ -34,38 +34,56 @@ class AllUpcomingMovies extends StatelessWidget {
                   arguments: movie,
                 );
               },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              child: Stack(
+                alignment: Alignment.topRight, // Align heart button top-right
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(
-                      '${basePosterUrl}${movie.posterPath}', // Your base URL for the posters
-                      width: 120,
-                      height: 180,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Center(child: Icon(Icons.broken_image)),
-                    ),
+                  // Movie Poster
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          '${basePosterUrl}${movie.posterPath}', // Your base URL for the posters
+                          width: 120,
+                          height: 180,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          },
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Center(child: Icon(Icons.broken_image)),
+                        ),
+                      ),
+                      const SizedBox(
+                          height: 8.0), // Space between poster and title
+                      Text(
+                        movie.title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                          height: 4.0), // Space between title and subtitle
+                      Text(
+                        "Ratings: ${movie.voteAverage.toStringAsFixed(1)}",
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8.0), // Space between poster and title
-                  Text(
-                    movie.title,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  // Heart icon on the top-right corner
+                  const Positioned(
+                    top: 10,
+                    right: 5,
+                    child: Icon(
+                      Icons.favorite_border, // Heart icon
+                      color: Colors.blue, // Icon color
+                      size: 24, // Icon size
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                      height: 4.0), // Space between title and subtitle
-                  Text(
-                    "Ratings: ${movie.voteAverage.toStringAsFixed(1)}",
-                    style: const TextStyle(fontSize: 12),
                   ),
                 ],
               ),

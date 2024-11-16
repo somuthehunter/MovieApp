@@ -10,7 +10,7 @@ import 'package:movie_app/movies/presentation/pages/search_screen.dart';
 
 class Navigation extends StatelessWidget {
   final List<Widget> pages = [
-    MovieScreen(), // Main MovieScreen widget with movie posters and trending movies
+    const MovieScreen(), // Main MovieScreen widget with movie posters and trending movies
     SearchScreen(), // Placeholder for Search Screen
     const Center(child: Text("Favorites")), // Placeholder for Favorites Screen
   ];

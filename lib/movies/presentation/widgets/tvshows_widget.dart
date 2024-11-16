@@ -61,8 +61,8 @@ class TvshowsWidget extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: state.tvShows.map((movie) {
-                        return buildMovieThumbnail(context, movie);
+                      children: state.tvShows.map((tvShow) {
+                        return buildTvShowThumbnail(context, tvShow);
                       }).toList(),
                     ),
                   ),
@@ -78,7 +78,7 @@ class TvshowsWidget extends StatelessWidget {
     );
   }
 
-  Widget buildMovieThumbnail(BuildContext context, TVShow movie) {
+  Widget buildTvShowThumbnail(BuildContext context, TVShow tvShow) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: GestureDetector(
@@ -86,23 +86,37 @@ class TvshowsWidget extends StatelessWidget {
           Navigator.pushNamed(
             context,
             AppRoutes.webSeriesDetails,
-            arguments: movie, // Pass a single movie entity
+            arguments: tvShow, // Pass a single TV show entity
           );
         },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Image.network(
-            '$basePosterUrl${movie.posterPath}',
-            width: 120,
-            height: 180,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return const Center(child: CircularProgressIndicator());
-            },
-            errorBuilder: (context, error, stackTrace) =>
-                const Center(child: Icon(Icons.broken_image)),
-          ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                '$basePosterUrl${tvShow.posterPath}',
+                width: 120,
+                height: 180,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const Center(child: CircularProgressIndicator());
+                },
+                errorBuilder: (context, error, stackTrace) =>
+                    const Center(child: Icon(Icons.broken_image)),
+              ),
+            ),
+            // Heart icon on the top-right corner
+            const Positioned(
+              top: 10,
+              right: 10,
+              child: Icon(
+                Icons.favorite_border, // Heart icon
+                color: Colors.blue, // Icon color
+                size: 24, // Icon size
+              ),
+            ),
+          ],
         ),
       ),
     );

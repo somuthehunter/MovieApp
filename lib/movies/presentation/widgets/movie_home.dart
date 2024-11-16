@@ -62,6 +62,7 @@ class MovieCarousel extends StatelessWidget {
             child: Stack(
               key: ValueKey(movie.id),
               children: [
+                // Movie Poster
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
@@ -77,51 +78,15 @@ class MovieCarousel extends StatelessWidget {
                         const Center(child: Icon(Icons.broken_image)),
                   ),
                 ),
-                Positioned(
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            movie.title,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.star,
-                              color: Colors.yellow, // Star color
-                              size: 16,
-                            ),
-                            const SizedBox(
-                                width: 4), // Spacing between star and rating
-                            Text(
-                              movie.voteAverage.toString(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+
+                // Favorite Icon (Love Icon) on top right
+                const Positioned(
+                  top: 40,
+                  left: 10,
+                  child: Icon(
+                    Icons.favorite_border, // Heart icon
+                    color: Colors.blue, // Icon color
+                    size: 30, // Icon size
                   ),
                 ),
               ],

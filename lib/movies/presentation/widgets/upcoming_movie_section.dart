@@ -92,20 +92,34 @@ class UpComingMoviesWidget extends StatelessWidget {
             arguments: movie, // Pass the single movie entity
           );
         },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Image.network(
-            '$basePosterUrl${movie.posterPath}',
-            width: 120,
-            height: 180,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return const Center(child: CircularProgressIndicator());
-            },
-            errorBuilder: (context, error, stackTrace) =>
-                const Center(child: Icon(Icons.broken_image)),
-          ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                '$basePosterUrl${movie.posterPath}',
+                width: 120,
+                height: 180,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const Center(child: CircularProgressIndicator());
+                },
+                errorBuilder: (context, error, stackTrace) =>
+                    const Center(child: Icon(Icons.broken_image)),
+              ),
+            ),
+            // Heart icon on the top-right corner
+            const Positioned(
+              top: 10,
+              right: 10,
+              child: Icon(
+                Icons.favorite_border, // Heart icon
+                color: Colors.blue, // Icon color
+                size: 24, // Icon size
+              ),
+            ),
+          ],
         ),
       ),
     );
