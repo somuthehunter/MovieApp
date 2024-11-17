@@ -88,18 +88,18 @@ class MovieScreen extends StatelessWidget {
       body: Stack(
         children: [
           // SingleChildScrollView with Movie sections
-          const SingleChildScrollView(
+          SingleChildScrollView(
             child: Column(
               children: [
                 // General Movies Section (Movie Carousel)
                 MovieCarouselWidget(), // Direct call to MovieCarouselWidget
 
                 // Trending Movies Section
-                TrendingMoviesWidget(), // Direct call to TrendingMoviesWidget
+                const TrendingMoviesWidget(), // Direct call to TrendingMoviesWidget
                 // For upcoming movies
-                UpComingMoviesWidget(),
+                const UpComingMoviesWidget(),
                 // Showing here all the series
-                TvshowsWidget(),
+                const TvshowsWidget(),
               ],
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:movie_app/movies/domain/entity/movie_entity.dart';
 
 abstract class MovieEvent extends Equatable {
   @override
@@ -18,4 +19,22 @@ class SearchMovies extends MovieEvent {
 
   @override
   List<Object?> get props => [query];
+}
+
+class AddToFavourites extends MovieEvent {
+  final MovieEntity movie;
+
+  AddToFavourites({required this.movie});
+
+  @override
+  List<Object?> get props => [movie];
+}
+
+class RemoveFromFavourites extends MovieEvent {
+  final MovieEntity movie;
+
+  RemoveFromFavourites({required this.movie});
+
+  @override
+  List<Object?> get props => [movie];
 }

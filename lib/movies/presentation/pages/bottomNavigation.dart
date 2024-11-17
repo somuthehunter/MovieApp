@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/movies/presentation/bloc/navigation/navigation_bloc.dart';
 import 'package:movie_app/movies/presentation/bloc/navigation/navigation_event.dart';
 import 'package:movie_app/movies/presentation/bloc/navigation/navigation_state.dart';
+import 'package:movie_app/movies/presentation/pages/favourite_movies_screen.dart';
 import 'package:movie_app/movies/presentation/pages/movie_homeScreen.dart';
 import 'package:movie_app/movies/presentation/pages/search_screen.dart';
 // import 'package:movie_app/movies/presentation/widgets/movie_screen.dart';
@@ -12,7 +13,8 @@ class Navigation extends StatelessWidget {
   final List<Widget> pages = [
     const MovieScreen(), // Main MovieScreen widget with movie posters and trending movies
     SearchScreen(), // Placeholder for Search Screen
-    const Center(child: Text("Favorites")), // Placeholder for Favorites Screen
+    // ignore: prefer_const_constructors
+    FavoriteMoviesScreen(), // Placeholder for Favorites Screen
   ];
 
   @override

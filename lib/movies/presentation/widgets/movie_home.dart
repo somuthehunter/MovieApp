@@ -16,10 +16,7 @@ class MovieCarouselWidget extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           getIt<MovieBloc>()..add(GetMovies()), // Trigger the GetMovies event
-
-      child:
-          // General Movies Section (Movie Carousel)
-          BlocBuilder<MovieBloc, MovieState>(
+      child: BlocBuilder<MovieBloc, MovieState>(
         builder: (context, state) {
           if (state is MovieLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -59,6 +56,12 @@ class MovieCarousel extends StatelessWidget {
               Navigator.pushNamed(context, '/all-movie-details',
                   arguments: movie);
             },
+            onDoubleTap: () {
+              // Add to favorites on double-tap
+              context.read<MovieBloc>().add(AddToFavourites(movie: movie));
+              print("Added to The Favourites : ${movie}");
+              
+            },
             child: Stack(
               key: ValueKey(movie.id),
               children: [
@@ -80,13 +83,26 @@ class MovieCarousel extends StatelessWidget {
                 ),
 
                 // Favorite Icon (Love Icon) on top right
-                const Positioned(
+                Positioned(
                   top: 40,
                   left: 10,
-                  child: Icon(
-                    Icons.favorite_border, // Heart icon
-                    color: Colors.blue, // Icon color
-                    size: 30, // Icon size
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.favorite,
+                      color: context.read<MovieBloc>().state is MovieDone &&
+                              (context.read<MovieBloc>().state as MovieDone)
+                                  .favoriteMovies
+                                  .contains(movie)
+                          ? Colors.red // Show red if it's a favorite
+                          : Colors.grey, // Otherwise, show grey
+                    ),
+                    iconSize: 30,
+                    onPressed: () {
+                      // Add to favorites on icon tap
+                      context
+                          .read<MovieBloc>()
+                          .add(AddToFavourites(movie: movie));
+                    },
                   ),
                 ),
               ],

@@ -9,73 +9,126 @@ import 'movie_state.dart';
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final GetMoviesUsecase getMoviesUsecase;
 
+  /// To keep track of favorite movies
+  final List<MovieEntity> _favoriteMovies = [];
+
   MovieBloc(this.getMoviesUsecase) : super(MovieLoading()) {
+    // Define event handlers
     on<GetMovies>((event, emit) => _fetchMovies(emit));
     on<GetTrendingMovies>((event, emit) => _fetchTrendingMovies(emit));
     on<UpComingMovies>((event, emit) => _fetchUpcomingMovies(emit));
     on<SearchMovies>((event, emit) => _fetchSearchMovies(event, emit));
+    on<AddToFavourites>((event, emit) => _addToFavorites(event.movie, emit));
+    on<RemoveFromFavourites>(
+        (event, emit) => _removeFromFavorites(event.movie, emit));
   }
 
+  /// Fetch general movies
   Future<void> _fetchMovies(Emitter<MovieState> emit) async {
     await _fetchData(
       emit,
       fetchAction: () => getMoviesUsecase.getMovies(apiKey),
-      onSuccess: (movies) =>
-          MovieDone(movies: movies, trendingMovies: [], upComingMovies: []),
+      onSuccess: (movies) => _buildMovieDoneState(movies: movies),
     );
   }
 
+  /// Fetch trending movies
   Future<void> _fetchTrendingMovies(Emitter<MovieState> emit) async {
     await _fetchData(
       emit,
       fetchAction: () => getMoviesUsecase.getTrendingMovies(apiKey),
-      onSuccess: (trendingMovies) => MovieDone(
-          movies: [], trendingMovies: trendingMovies, upComingMovies: []),
+      onSuccess: (trendingMovies) =>
+          _buildMovieDoneState(trendingMovies: trendingMovies),
     );
   }
 
+  /// Fetch upcoming movies
   Future<void> _fetchUpcomingMovies(Emitter<MovieState> emit) async {
     await _fetchData(
       emit,
       fetchAction: () => getMoviesUsecase.upComingMovies(apiKey),
-      onSuccess: (upComingMovies) => MovieDone(
-          movies: [], trendingMovies: [], upComingMovies: upComingMovies),
+      onSuccess: (upComingMovies) =>
+          _buildMovieDoneState(upComingMovies: upComingMovies),
     );
   }
 
+  /// Fetch search results
   Future<void> _fetchSearchMovies(
       SearchMovies event, Emitter<MovieState> emit) async {
-    // Emit loading state
-    emit(MovieLoading());
+    emit(MovieLoading()); // Emit loading state
 
     try {
-      // Fetch search results from the use case
       final result = await getMoviesUsecase.searchMovies(apiKey, event.query);
-      // print(result);
+
       if (result is DataSuccess<List<MovieEntity>>) {
-        // If search is successful, emit the success state with search results
-        // print(result);
         emit(MovieSearchSuccess(result.data!));
-        print("Emitting MovieSearchSuccess with results: ${result.data!}");
       } else if (result is DataFailed) {
-        // Emit error state in case of failure
         emit(MovieSearchError(result.error.toString()));
       }
     } catch (e) {
-      // Handle any unexpected errors
       emit(MovieSearchError('An unexpected error occurred: $e'));
     }
   }
 
-  /// Generalized data fetching method to handle data retrieval and error management.
+  /// Add a movie to the favorites list
+  void _addToFavorites(MovieEntity movie, Emitter<MovieState> emit) {
+    if (!_favoriteMovies.contains(movie)) {
+      _favoriteMovies.add(movie);
+    }
+    print(" In the List : ${_favoriteMovies}");
+    _emitUpdatedState(emit);
+  }
+
+  /// Remove a movie from the favorites list
+  void _removeFromFavorites(MovieEntity movie, Emitter<MovieState> emit) {
+    _favoriteMovies.remove(movie);
+    _emitUpdatedState(emit);
+  }
+
+  /// Emit updated state with the current favorite movies
+  void _emitUpdatedState(Emitter<MovieState> emit) {
+    if (state is MovieDone) {
+      final currentState = state as MovieDone;
+      emit(MovieDone(
+        movies: currentState.movies,
+        trendingMovies: currentState.trendingMovies,
+        upComingMovies: currentState.upComingMovies,
+        favoriteMovies: _favoriteMovies,
+      ));
+    } else {
+      emit(MovieDone(
+        movies: [],
+        trendingMovies: [],
+        upComingMovies: [],
+        favoriteMovies: _favoriteMovies,
+      ));
+    }
+  }
+
+  /// Build the MovieDone state with updated favorites
+  MovieDone _buildMovieDoneState({
+    List<MovieEntity>? movies,
+    List<MovieEntity>? trendingMovies,
+    List<MovieEntity>? upComingMovies,
+  }) {
+    return MovieDone(
+      movies: movies ?? [],
+      trendingMovies: trendingMovies ?? [],
+      upComingMovies: upComingMovies ?? [],
+      favoriteMovies: _favoriteMovies,
+    );
+  }
+
+  /// Generalized method for data fetching
   Future<void> _fetchData(
     Emitter<MovieState> emit, {
     required Future<DataState<List<MovieEntity>>> Function() fetchAction,
     required MovieState Function(List<MovieEntity> data) onSuccess,
   }) async {
-    emit(MovieLoading());
+    emit(MovieLoading()); // Emit loading state
     try {
       final result = await fetchAction();
+
       if (result is DataSuccess<List<MovieEntity>>) {
         emit(onSuccess(result.data!));
       } else if (result is DataFailed) {
