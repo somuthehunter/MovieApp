@@ -9,4 +9,9 @@ abstract class MovieRepository {
   //searching query
   Future<DataState<List<MovieEntity>>> searchMovies(
       String apiKey, String query);
+
+  //handle favourite movies
+  Future<DataState<List<MovieEntity>>> getFavoriteMovies();
+  Future<DataState<void>> addMovieToFavorites(MovieEntity movie);
+  Future<DataState<void>> removeMovieFromFavorites(MovieEntity movie);
 }

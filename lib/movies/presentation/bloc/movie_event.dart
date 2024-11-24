@@ -38,3 +38,5 @@ class RemoveFromFavourites extends MovieEvent {
   @override
   List<Object?> get props => [movie];
 }
+
+class LoadFavoriteMoviesEvent extends MovieEvent {}

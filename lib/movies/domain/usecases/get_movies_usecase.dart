@@ -27,4 +27,16 @@ class GetMoviesUsecase {
       String apiKey, String query) {
     return repository.searchMovies(apiKey, query);
   }
+
+  //favourite movies handler
+  Future<DataState<List<MovieEntity>>> getFavoriteMovies() =>
+      repository.getFavoriteMovies();
+
+  // Add to Favorites
+  Future<DataState<void>> addMovieToFavorites(MovieEntity movie) =>
+      repository.addMovieToFavorites(movie);
+
+  // Remove from Favorites
+  Future<DataState<void>> removeMovieFromFavorites(MovieEntity movie) =>
+      repository.removeMovieFromFavorites(movie);
 }

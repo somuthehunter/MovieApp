@@ -60,7 +60,6 @@ class MovieCarousel extends StatelessWidget {
               // Add to favorites on double-tap
               context.read<MovieBloc>().add(AddToFavourites(movie: movie));
               print("Added to The Favourites : ${movie}");
-              
             },
             child: Stack(
               key: ValueKey(movie.id),
