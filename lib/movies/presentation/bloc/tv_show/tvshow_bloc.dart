@@ -12,6 +12,7 @@ class TvShowBloc extends Bloc<TvShowEvent, TvShowState> {
   TvShowBloc(this.getTVShowsUsecase) : super(TvShowLoading()) {
     on<GetTvShows>(_onGetTvShows);
     on<GetTrendingTvShows>(_onGetTrendingTvShows);
+    on<GetUpcomingTvShows>(_onGetUpcomingTvShows);
   }
 
   // Handler for fetching all TV shows
@@ -32,6 +33,18 @@ class TvShowBloc extends Bloc<TvShowEvent, TvShowState> {
       GetTrendingTvShows event, Emitter<TvShowState> emit) async {
     emit(TvShowLoading());
     final result = await getTVShowsUsecase.getTrendingTvShows(apiKey);
+
+    if (result is DataSuccess<List<TVShow>>) {
+      emit(TvShowDone(tvShows: result.data!));
+    } else if (result is DataFailed) {
+      emit(TvShowError(result.error.toString()));
+    }
+  }
+
+  Future<void> _onGetUpcomingTvShows(
+      GetUpcomingTvShows event, Emitter<TvShowState> emit) async {
+    emit(TvShowLoading());
+    final result = await getTVShowsUsecase.getUpcomingTvShows(apiKey);
 
     if (result is DataSuccess<List<TVShow>>) {
       emit(TvShowDone(tvShows: result.data!));

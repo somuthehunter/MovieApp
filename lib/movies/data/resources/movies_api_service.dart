@@ -71,4 +71,14 @@ class MoviesApiService {
     // print("search response : ${response}");
     return response;
   }
+  Future<Response> getUpcomingTvShows(String apiKey) async {
+    final response = await _dio.get(
+      '${apiBaseUrl}tv/airing_today',
+      queryParameters: {
+        'api_key': apiKey,
+      },
+    );
+    // print("search response : ${response}");
+    return response;
+  }
 }

@@ -7,7 +7,6 @@ import 'package:movie_app/movies/presentation/widgets/side_bar_trendingmovieScre
 import 'package:movie_app/movies/presentation/widgets/side_bar_upcoming_movies.dart';
 
 import 'package:movie_app/movies/presentation/widgets/tvshows_widget.dart';
-// Import TrendingMoviesWidget
 
 class SideBarTvShows extends StatelessWidget {
   const SideBarTvShows({super.key});
@@ -108,7 +107,16 @@ class SideBarTvShows extends StatelessWidget {
           ],
         ),
       ),
-      body: const TvshowsWidget(),
+      // Add scrollable view to the body
+      body: const SingleChildScrollView(
+        child: Column(
+          children: [
+            TvshowsWidget(),
+            SizedBox(height: 20), // Example spacing between widgets
+            // Add more widgets if needed
+          ],
+        ),
+      ),
     );
   }
 }
