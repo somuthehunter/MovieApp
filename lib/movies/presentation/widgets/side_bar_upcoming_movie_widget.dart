@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/movies/presentation/pages/movie_homeScreen.dart';
 import 'package:movie_app/movies/presentation/widgets/movie_home.dart'; // Import MovieCarouselWidget
-import 'package:movie_app/movies/presentation/widgets/side_bar_TV_shows.dart';
 import 'package:movie_app/movies/presentation/widgets/side_bar_movieScreen_widget.dart';
 import 'package:movie_app/movies/presentation/widgets/side_bar_trendingmovieScreen_widget.dart';
-import 'package:movie_app/movies/presentation/widgets/side_bar_upcoming_movie_widget.dart';
 import 'package:movie_app/movies/presentation/widgets/trending_movies_widget.dart';
 import 'package:movie_app/movies/presentation/widgets/tvshows_widget.dart';
 import 'package:movie_app/movies/presentation/widgets/upcoming_movie_section.dart'; // Import TrendingMoviesWidget
 
-class MovieScreen extends StatelessWidget {
-  const MovieScreen({super.key});
+class SideBarUpcomingMovieWidget extends StatelessWidget {
+  const SideBarUpcomingMovieWidget({super.key});
 
-  // Define a method to handle the button press (e.g., opening a drawer)
   void _onMenuButtonPressed(BuildContext context) {
     Scaffold.of(context)
         .openDrawer(); // Open the drawer when the menu button is pressed
@@ -20,6 +18,21 @@ class MovieScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Movies"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MovieScreen(),
+              ),
+              (route) => false,
+            )
+          },
+        ),
+      ),
       // Add a Drawer to the Scaffold
       drawer: Drawer(
         child: ListView(
@@ -72,7 +85,7 @@ class MovieScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SideBarTvShows()),
+                      builder: (context) => const TvshowsWidget()),
                 );
               },
             ),
@@ -84,7 +97,7 @@ class MovieScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SideBarUpcomingMovieWidget()),
+                      builder: (context) => const UpComingMoviesWidget()),
                 );
               },
             ),
@@ -105,7 +118,7 @@ class MovieScreen extends StatelessWidget {
                 // For upcoming movies
                 UpComingMoviesWidget(),
                 // Showing here all the series
-                TvshowsWidget(),
+                // TvshowsWidget(),
               ],
             ),
           ),
