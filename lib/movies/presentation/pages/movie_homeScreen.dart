@@ -4,8 +4,8 @@ import 'package:movie_app/movies/presentation/widgets/trending_movies_widget.dar
 import 'package:movie_app/movies/presentation/widgets/tvshows_widget.dart';
 import 'package:movie_app/movies/presentation/widgets/upcoming_movie_section.dart'; // Import TrendingMoviesWidget
 
-class MovieScreen extends StatelessWidget {
-  const MovieScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   // Define a method to handle the button press (e.g., opening a drawer)
   void _onMenuButtonPressed(BuildContext context) {
@@ -42,7 +42,7 @@ class MovieScreen extends StatelessWidget {
                 // Close the drawer and navigate to the MovieScreen widget
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const MovieScreen()),
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
                 );
               },
             ),
