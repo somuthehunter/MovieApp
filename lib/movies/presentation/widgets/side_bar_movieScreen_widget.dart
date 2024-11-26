@@ -3,9 +3,10 @@ import 'package:movie_app/movies/presentation/pages/movie_homeScreen.dart';
 import 'package:movie_app/movies/presentation/widgets/movie_home.dart'; // Import MovieCarouselWidget
 import 'package:movie_app/movies/presentation/widgets/side_bar_TV_shows.dart';
 import 'package:movie_app/movies/presentation/widgets/side_bar_trendingmovieScreen_widget.dart';
-import 'package:movie_app/movies/presentation/widgets/side_bar_upcoming_movie_widget.dart';
+
+import 'package:movie_app/movies/presentation/widgets/side_bar_upcoming_movies.dart';
 import 'package:movie_app/movies/presentation/widgets/trending_movies_widget.dart';
-import 'package:movie_app/movies/presentation/widgets/tvshows_widget.dart';
+
 import 'package:movie_app/movies/presentation/widgets/upcoming_movie_section.dart'; // Import TrendingMoviesWidget
 
 class SideBarMoviescreenWidget extends StatelessWidget {

@@ -3,43 +3,42 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/config/service_container.dart';
 import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/core/constants/constant.dart';
-import 'package:movie_app/movies/domain/entity/tv_show_entity.dart';
-
+import 'package:movie_app/movies/domain/entity/tv_show_entity.dart'; // Assuming this exists
 import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_bloc.dart';
 import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_event.dart';
 import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_state.dart';
-import 'package:movie_app/movies/presentation/widgets/trending_tv_shows.dart';
 
-class TvshowsWidget extends StatelessWidget {
-  const TvshowsWidget({super.key});
+class TrendingTvShows extends StatelessWidget {
+  const TrendingTvShows({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<TvShowBloc>()..add(GetTvShows()),
+      create: (context) => getIt<TvShowBloc>()..add(GetTrendingTvShows()),
       child: BlocBuilder<TvShowBloc, TvShowState>(
         builder: (context, state) {
           if (state is TvShowLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is TvShowDone) {
-            if (state.tvShows.isEmpty) {
+            final trendingTvShows = state.tvShows; // Correct field name
+
+            if (trendingTvShows.isEmpty) {
               return const Center(
-                  child: Text('Web Series are on the way. Please Wait'));
+                  child: Text('No trending TV shows available'));
             }
 
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              padding: const EdgeInsets.only(bottom: 5.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Web Series Section
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Web Series',
+                          'Trending Series',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -47,8 +46,11 @@ class TvshowsWidget extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, AppRoutes.allWebSeries,
-                                arguments: state.tvShows);
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.allWebSeries,
+                              arguments: trendingTvShows,
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             side: const BorderSide(color: Colors.blue),
@@ -63,22 +65,17 @@ class TvshowsWidget extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: state.tvShows.map((tvShow) {
+                      children: trendingTvShows.map((tvShow) {
                         return buildTvShowThumbnail(context, tvShow);
                       }).toList(),
                     ),
                   ),
-
-                  // Trending TV Shows Section
-
-                  const TrendingTvShows(),
                 ],
               ),
             );
           } else if (state is TvShowError) {
             return Center(child: Text('Error: ${state.error}'));
           }
-
           return const SizedBox.shrink();
         },
       ),
@@ -93,7 +90,7 @@ class TvshowsWidget extends StatelessWidget {
           Navigator.pushNamed(
             context,
             AppRoutes.webSeriesDetails,
-            arguments: tvShow, // Pass a single TV show entity
+            arguments: tvShow, // Pass the single TV show entity
           );
         },
         child: Stack(
@@ -118,9 +115,9 @@ class TvshowsWidget extends StatelessWidget {
               top: 10,
               right: 10,
               child: Icon(
-                Icons.favorite_border, // Heart icon
-                color: Colors.blue, // Icon color
-                size: 24, // Icon size
+                Icons.favorite_border,
+                color: Colors.blue,
+                size: 24,
               ),
             ),
           ],

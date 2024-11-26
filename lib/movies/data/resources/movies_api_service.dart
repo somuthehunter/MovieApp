@@ -60,4 +60,15 @@ class MoviesApiService {
     // print("search response : ${response}");
     return response;
   }
+
+  Future<Response> getTrendingTvShows(String apiKey) async {
+    final response = await _dio.get(
+      '${apiBaseUrl}trending/tv/day',
+      queryParameters: {
+        'api_key': apiKey,
+      },
+    );
+    // print("search response : ${response}");
+    return response;
+  }
 }

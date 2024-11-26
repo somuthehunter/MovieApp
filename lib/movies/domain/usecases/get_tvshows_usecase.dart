@@ -10,4 +10,8 @@ class GetTvshowsUsecase {
   Future<DataState<List<TVShow>>> getTvshows(String apiKey) {
     return repository.getTvShows(apiKey);
   }
+
+  Future<DataState<List<TVShow>>> getTrendingTvShows(String apiKey) {
+    return repository.getTrendingTvShows(apiKey);
+  }
 }

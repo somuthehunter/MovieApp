@@ -57,4 +57,50 @@ class TvshowsRepositoryImpls extends TvshowRepository {
       );
     }
   }
+
+  @override
+  Future<DataState<List<TVShow>>> getTrendingTvShows(String apiKey) async {
+    try {
+      // Make the API call and print the request details
+      // print("getTrendingMovies called");
+      final response = await _apiService.getTrendingTvShows(apiKey);
+
+      // Check the response status code
+      if (response.statusCode == HttpStatus.ok) {
+        // If successful, process the results
+        final tvShow = response.data['results'] as List<dynamic>;
+        print("Response received successfully: ${response.data}");
+
+        List<TVShow> tvShows = tvShow.map((json) {
+          return TVShowModel.fromJson(json as Map<String, dynamic>);
+        }).toList();
+
+        return DataSuccess(tvShows);
+      } else {
+        // Handle the case where the response status is not OK
+
+        return DataFailed(
+          DioException(
+            requestOptions: response.requestOptions,
+            response: response,
+            error: "Failed to load trending movies: ${response.statusMessage}",
+            type: DioExceptionType.badResponse,
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      // Handle Dio specific exceptions
+
+      return DataFailed(e);
+    } catch (e) {
+      // Handle any other exceptions
+
+      return DataFailed(
+        DioException(
+          error: e.toString(),
+          requestOptions: RequestOptions(path: ''),
+        ),
+      );
+    }
+  }
 }

@@ -6,3 +6,5 @@ abstract class TvShowEvent extends Equatable {
 }
 
 class GetTvShows extends TvShowEvent {}
+
+class GetTrendingTvShows extends TvShowEvent {}

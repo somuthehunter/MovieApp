@@ -18,6 +18,7 @@ class AppRoutes {
   static const String allWebSeries = '/all-web-series';
   static const String webSeriesDetails = '/series-details';
   static const String searchResult = '/search-results';
+  static const String trendingTvShow = '/trending-tv';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -59,6 +60,7 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => SearchResultsScreen(results: results),
         );
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
