@@ -5,7 +5,7 @@ import 'package:movie_app/movies/domain/entity/tv_show_entity.dart';
 import 'package:movie_app/movies/presentation/pages/all_trending_movies.dart';
 import 'package:movie_app/movies/presentation/pages/all_tv_show.dart';
 import 'package:movie_app/movies/presentation/pages/all_upcoming_movies.dart';
-import 'package:movie_app/movies/presentation/pages/bottomNavigation.dart';
+import 'package:movie_app/movies/presentation/pages/bottom_navigation.dart';
 import 'package:movie_app/movies/presentation/pages/movie_all_details.dart';
 import 'package:movie_app/movies/presentation/pages/search_results_screen.dart';
 import 'package:movie_app/movies/presentation/pages/show_details.dart';
@@ -23,7 +23,7 @@ class AppRoutes {
     switch (settings.name) {
       case home:
         return MaterialPageRoute(
-          builder: (_) => Navigation(),
+          builder: (_) => BottomNavigation(),
         );
       case allTrendingMovies:
         // Pass the list of trending movies as arguments

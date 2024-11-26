@@ -5,17 +5,19 @@ import 'package:movie_app/movies/presentation/bloc/navigation/navigation_bloc.da
 import 'package:movie_app/movies/presentation/bloc/navigation/navigation_event.dart';
 import 'package:movie_app/movies/presentation/bloc/navigation/navigation_state.dart';
 import 'package:movie_app/movies/presentation/pages/favourite_movies_screen.dart';
-import 'package:movie_app/movies/presentation/pages/movie_homeScreen.dart';
+import 'package:movie_app/movies/presentation/pages/movie_home_screen.dart';
 import 'package:movie_app/movies/presentation/pages/search_screen.dart';
 // import 'package:movie_app/movies/presentation/widgets/movie_screen.dart';
 
-class Navigation extends StatelessWidget {
+class BottomNavigation extends StatelessWidget {
   final List<Widget> pages = [
     const HomeScreen(), // Main MovieScreen widget with movie posters and trending movies
     SearchScreen(), // Placeholder for Search Screen
     // ignore: prefer_const_constructors
     FavoriteMoviesScreen(), // Placeholder for Favorites Screen
   ];
+
+  BottomNavigation({super.key});
 
   @override
   Widget build(BuildContext context) {
