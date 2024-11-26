@@ -18,24 +18,26 @@ class MovieCarouselWidget extends StatelessWidget {
           getIt<MovieBloc>()..add(GetMovies()), // Trigger the GetMovies event
       child: BlocBuilder<MovieBloc, MovieState>(
         builder: (context, state) {
-          if (state is MovieLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is MovieDone) {
-            if (state.movies.isEmpty) {
-              return const Center(child: Text('No movies available'));
-            }
-            return MovieCarousel(movies: state.movies); // Pass movies list
-          } else if (state is MovieError) {
-            return Center(child: Text('Error: ${state.error}'));
+          switch (state) {
+            case MovieLoading _:
+              return const Center(child: CircularProgressIndicator());
+            case MovieDone _:
+              if (state.movies.isEmpty) {
+                return const Center(child: Text('No movies available'));
+              }
+              return MovieCarousel(movies: state.movies);
+            case MovieError _:
+              return Center(child: Text('Error: ${state.error}'));
+            default:
+              return const SizedBox.shrink();
           }
-          return const SizedBox.shrink(); // Default empty state
         },
       ),
     );
   }
 }
 
-// MovieCarousel widget to display the carousel slider
+/// MovieCarousel widget to display the carousel slider
 class MovieCarousel extends StatelessWidget {
   final List<MovieEntity> movies;
 

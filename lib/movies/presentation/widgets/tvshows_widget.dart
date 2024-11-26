@@ -18,67 +18,70 @@ class TvshowsWidget extends StatelessWidget {
       create: (context) => getIt<TvShowBloc>()..add(GetTvShows()),
       child: BlocBuilder<TvShowBloc, TvShowState>(
         builder: (context, state) {
-          if (state is TvShowLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is TvShowDone) {
-            if (state.tvShows.isEmpty) {
-              return const Center(
-                  child: Text('Web Series are on the way. Please Wait'));
-            }
+          switch (state) {
+            case TvShowLoading _:
+              return const Center(child: CircularProgressIndicator());
+            case TvShowDone _:
+              if (state.tvShows.isEmpty) {
+                return const Center(
+                    child: Text('Web Series are on the way. Please Wait'));
+              }
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Web Series',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Web Series',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, AppRoutes.allWebSeries,
-                                arguments: state.tvShows);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            side: const BorderSide(color: Colors.blue),
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Colors.blue[600],
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.allWebSeries,
+                                  arguments: state.tvShows);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              side: const BorderSide(color: Colors.blue),
+                              backgroundColor: Colors.transparent,
+                              foregroundColor: Colors.blue[600],
+                            ),
+                            child: const Text('See Details'),
                           ),
-                          child: const Text('See Details'),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: state.tvShows.map((tvShow) {
-                        return buildTvShowThumbnail(context, tvShow);
-                      }).toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: state.tvShows.map((tvShow) {
+                          return _buildTvShowThumbnail(context, tvShow);
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          } else if (state is TvShowError) {
-            return Center(child: Text('Error: ${state.error}'));
+                  ],
+                ),
+              );
+            case TvShowError _:
+              return Center(child: Text('Error: ${state.error}'));
+            default:
+              return const SizedBox.shrink();
           }
-          return const SizedBox.shrink();
         },
       ),
     );
   }
 
-  Widget buildTvShowThumbnail(BuildContext context, TVShow tvShow) {
+  Widget _buildTvShowThumbnail(BuildContext context, TVShow tvShow) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: GestureDetector(

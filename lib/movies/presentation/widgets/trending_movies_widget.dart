@@ -17,67 +17,71 @@ class TrendingMoviesWidget extends StatelessWidget {
       create: (context) => getIt<MovieBloc>()..add(GetTrendingMovies()),
       child: BlocBuilder<MovieBloc, MovieState>(
         builder: (context, state) {
-          if (state is MovieLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is MovieDone) {
-            if (state.trendingMovies.isEmpty) {
-              return const Center(child: Text('No trending movies available'));
-            }
+          switch (state) {
+            case MovieLoading _:
+              return const Center(child: CircularProgressIndicator());
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Trending Movies',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+            case MovieDone _:
+              if (state.trendingMovies.isEmpty) {
+                return const Center(
+                    child: Text('No trending movies available'));
+              }
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Trending Movies',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, AppRoutes.allTrendingMovies,
-                                arguments: state.trendingMovies);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            side: const BorderSide(color: Colors.blue),
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Colors.blue[600],
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.allTrendingMovies,
+                                  arguments: state.trendingMovies);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              side: const BorderSide(color: Colors.blue),
+                              backgroundColor: Colors.transparent,
+                              foregroundColor: Colors.blue[600],
+                            ),
+                            child: const Text('See Details'),
                           ),
-                          child: const Text('See Details'),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: state.trendingMovies.map((movie) {
-                        return buildMovieThumbnail(context, movie);
-                      }).toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: state.trendingMovies.map((movie) {
+                          return _buildMovieThumbnail(context, movie);
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          } else if (state is MovieError) {
-            return Center(child: Text('Error: ${state.error}'));
+                  ],
+                ),
+              );
+            case MovieError _:
+              return Center(child: Text('Error: ${state.error}'));
+            default:
+              return const SizedBox.shrink();
           }
-          return const SizedBox.shrink();
         },
       ),
     );
   }
 
-  Widget buildMovieThumbnail(BuildContext context, MovieEntity movie) {
+  Widget _buildMovieThumbnail(BuildContext context, MovieEntity movie) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: GestureDetector(

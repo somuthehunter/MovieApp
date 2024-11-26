@@ -18,70 +18,72 @@ class UpComingMoviesWidget extends StatelessWidget {
         ..add(UpComingMovies()), // Event for fetching upcoming movies
       child: BlocBuilder<MovieBloc, MovieState>(
         builder: (context, state) {
-          if (state is MovieLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is MovieDone) {
-            print("Upcoming Movies : ${state.upComingMovies}");
-            if (state.upComingMovies.isEmpty) {
-              return const Center(child: Text('No upcoming movies available'));
-            }
+          switch (state) {
+            case MovieLoading _:
+              return const Center(child: CircularProgressIndicator());
+            case MovieDone _:
+              if (state.upComingMovies.isEmpty) {
+                return const Center(
+                    child: Text('No upcoming movies available'));
+              }
 
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Upcoming Movies',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Upcoming Movies',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, AppRoutes.upcomingMovies,
-                                arguments: state
-                                    .upComingMovies); // Navigates to the details screen
-                          },
-                          style: ElevatedButton.styleFrom(
-                            side: const BorderSide(color: Colors.blue),
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Colors.blue[600],
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.upcomingMovies,
+                                  arguments: state
+                                      .upComingMovies); // Navigates to the details screen
+                            },
+                            style: ElevatedButton.styleFrom(
+                              side: const BorderSide(color: Colors.blue),
+                              backgroundColor: Colors.transparent,
+                              foregroundColor: Colors.blue[600],
+                            ),
+                            child: const Text('See Details'),
                           ),
-                          child: const Text('See Details'),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: state.upComingMovies.map((movie) {
-                        return buildMovieThumbnail(
-                            context, movie); // Builds movie thumbnails
-                      }).toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: state.upComingMovies.map((movie) {
+                          return _buildMovieThumbnail(
+                              context, movie); // Builds movie thumbnails
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          } else if (state is MovieError) {
-            return Center(child: Text('Error: ${state.error}'));
+                  ],
+                ),
+              );
+            case MovieError _:
+              return Center(child: Text('Error: ${state.error}'));
+            default:
+              return const SizedBox.shrink();
           }
-          return const SizedBox.shrink();
         },
       ),
     );
   }
 
-  Widget buildMovieThumbnail(BuildContext context, MovieEntity movie) {
+  Widget _buildMovieThumbnail(BuildContext context, MovieEntity movie) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: GestureDetector(
