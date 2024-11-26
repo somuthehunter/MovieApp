@@ -7,7 +7,7 @@ import 'package:movie_app/movies/domain/repository/movie_repository.dart';
 import 'package:movie_app/movies/domain/repository/tvshow_repository.dart';
 import 'package:movie_app/movies/domain/usecases/get_movies_usecase.dart';
 import 'package:movie_app/movies/domain/usecases/get_tvshows_usecase.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_bloc.dart';
+import 'package:movie_app/movies/presentation/movie/movie_bloc.dart';
 import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_bloc.dart';
 
 final GetIt getIt = GetIt.instance;

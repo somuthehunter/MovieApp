@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/config/service_container.dart';
 import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/core/constants/constant.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_bloc.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_event.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_state.dart';
+import 'package:movie_app/movies/presentation/movie/movie_bloc.dart';
+import 'package:movie_app/movies/presentation/movie/movie_event.dart';
+import 'package:movie_app/movies/presentation/movie/movie_state.dart';
 import 'package:movie_app/movies/domain/entity/movie_entity.dart';
 
 class FavoriteMoviesScreen extends StatelessWidget {

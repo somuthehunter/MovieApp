@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/config/service_container.dart'; // For dependency injection
 import 'package:movie_app/core/constants/constant.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_bloc.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_event.dart';
-import 'package:movie_app/movies/presentation/bloc/movie_state.dart';
+import 'package:movie_app/movies/presentation/movie/movie_bloc.dart';
+import 'package:movie_app/movies/presentation/movie/movie_event.dart';
+import 'package:movie_app/movies/presentation/movie/movie_state.dart';
 import 'package:carousel_slider/carousel_slider.dart'; // Import carousel slider package
 import 'package:movie_app/movies/domain/entity/movie_entity.dart'; // Import MovieEntity
 
