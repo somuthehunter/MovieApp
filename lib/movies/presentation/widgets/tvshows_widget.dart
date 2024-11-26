@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/config/service_container.dart';
 import 'package:movie_app/core/app_routes.dart';
-import 'package:movie_app/core/constants/constant.dart';
-import 'package:movie_app/movies/domain/entity/tv_show_entity.dart';
-
+import 'package:movie_app/core/utilities/utilities.dart';
 import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_bloc.dart';
 import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_event.dart';
 import 'package:movie_app/movies/presentation/bloc/tv_show/tvshow_state.dart';
@@ -64,7 +62,8 @@ class TvshowsWidget extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: state.tvShows.map((tvShow) {
-                          return _buildTvShowThumbnail(context, tvShow);
+                          return Utilities.buildThumbnail(
+                              context: context, tvShow: tvShow);
                         }).toList(),
                       ),
                     ),
@@ -77,50 +76,6 @@ class TvshowsWidget extends StatelessWidget {
               return const SizedBox.shrink();
           }
         },
-      ),
-    );
-  }
-
-  Widget _buildTvShowThumbnail(BuildContext context, TVShow tvShow) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            AppRoutes.webSeriesDetails,
-            arguments: tvShow, // Pass a single TV show entity
-          );
-        },
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                '$basePosterUrl${tvShow.posterPath}',
-                width: 120,
-                height: 180,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return const Center(child: CircularProgressIndicator());
-                },
-                errorBuilder: (context, error, stackTrace) =>
-                    const Center(child: Icon(Icons.broken_image)),
-              ),
-            ),
-            // Heart icon on the top-right corner
-            const Positioned(
-              top: 10,
-              right: 10,
-              child: Icon(
-                Icons.favorite_border, // Heart icon
-                color: Colors.blue, // Icon color
-                size: 24, // Icon size
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
