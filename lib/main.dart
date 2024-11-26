@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:movie_app/config/theme/app_theme.dart';
 import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/config/service_container.dart';
+import 'package:movie_app/movies/presentation/pages/bottom_navigation.dart';
 import 'package:movie_app/movies/presentation/pages/movie_home_screen.dart';
 
 void main() {
@@ -23,7 +24,7 @@ class MovieApp extends StatelessWidget {
       theme: AppTheme.appTheme,
       initialRoute: AppRoutes.home,
       onGenerateRoute: AppRoutes.generateRoute,
-      home: const HomeScreen(),
+      home: BottomNavigation(),
     );
   }
 }
