@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/config/service_container.dart';
 import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/core/constants/constant.dart';
 import 'package:movie_app/movies/presentation/bloc/movie_bloc.dart';
@@ -8,7 +9,7 @@ import 'package:movie_app/movies/presentation/bloc/movie_state.dart';
 import 'package:movie_app/movies/domain/entity/movie_entity.dart';
 
 class SearchScreen extends StatelessWidget {
-  SearchScreen({Key? key}) : super(key: key);
+  SearchScreen({super.key});
 
   // TextEditingController for the search input field
   final TextEditingController _searchController = TextEditingController();
@@ -50,41 +51,44 @@ class SearchScreen extends StatelessWidget {
             ),
             // Results display
             Expanded(
-              child: BlocBuilder<MovieBloc, MovieState>(
-                builder: (context, state) {
-                  if (state is MovieLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is MovieSearchError) {
-                    return Center(
-                      child: Text(
-                        state.error,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    );
-                  } else if (state is MovieSearchSuccess) {
-                    final searchResults = state.searchResults;
-
-                    if (searchResults.isEmpty) {
+              child: BlocProvider(
+                create:(context) => getIt<MovieBloc>(),
+                child: BlocBuilder<MovieBloc, MovieState>(
+                  builder: (context, state) {
+                    if (state is MovieLoading) {
                       return const Center(
-                        child: Text('No results found.'),
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is MovieSearchError) {
+                      return Center(
+                        child: Text(
+                          state.error,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    } else if (state is MovieSearchSuccess) {
+                      final searchResults = state.searchResults;
+                
+                      if (searchResults.isEmpty) {
+                        return const Center(
+                          child: Text('No results found.'),
+                        );
+                      }
+                
+                      return ListView.builder(
+                        itemCount: searchResults.length,
+                        itemBuilder: (context, index) {
+                          final movie = searchResults[index];
+                          return _buildMovieItem(context, movie);
+                        },
+                      );
+                    } else {
+                      return const Center(
+                        child: Text('Start typing to search for movies!'),
                       );
                     }
-
-                    return ListView.builder(
-                      itemCount: searchResults.length,
-                      itemBuilder: (context, index) {
-                        final movie = searchResults[index];
-                        return _buildMovieItem(context, movie);
-                      },
-                    );
-                  } else {
-                    return const Center(
-                      child: Text('Start typing to search for movies!'),
-                    );
-                  }
-                },
+                  },
+                ),
               ),
             ),
           ],

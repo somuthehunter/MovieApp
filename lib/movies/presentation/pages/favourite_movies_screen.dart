@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/config/service_container.dart';
 import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/core/constants/constant.dart';
 import 'package:movie_app/movies/presentation/bloc/movie_bloc.dart';
@@ -16,33 +17,36 @@ class FavoriteMoviesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Favorite Movies'),
       ),
-      body: BlocBuilder<MovieBloc, MovieState>(
-        builder: (context, state) {
-          if (state is MovieDone) {
-            print("The retrieve movies is : ${state.favoriteMovies}");
-            return ListView.builder(
-              itemCount: state.favoriteMovies.length,
-              itemBuilder: (context, index) {
-                final movie = state.favoriteMovies[index];
-                return ListTile(
-                  title: Text(movie.title),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      context
-                          .read<MovieBloc>()
-                          .add(RemoveFromFavourites(movie: movie));
-                    },
-                  ),
-                );
-              },
-            );
-          } else if (state is MovieError) {
-            return Center(child: Text(state.error));
-          } else {
-            return Center(child: Text("No favorites found."));
-          }
-        },
+      body: BlocProvider(
+        create: (context) => getIt<MovieBloc>(),
+        child: BlocBuilder<MovieBloc, MovieState>(
+          builder: (context, state) {
+            if (state is MovieDone) {
+              print("The retrieve movies is : ${state.favoriteMovies}");
+              return ListView.builder(
+                itemCount: state.favoriteMovies.length,
+                itemBuilder: (context, index) {
+                  final movie = state.favoriteMovies[index];
+                  return ListTile(
+                    title: Text(movie.title),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        context
+                            .read<MovieBloc>()
+                            .add(RemoveFromFavourites(movie: movie));
+                      },
+                    ),
+                  );
+                },
+              );
+            } else if (state is MovieError) {
+              return Center(child: Text(state.error));
+            } else {
+              return Center(child: Text("No favorites found."));
+            }
+          },
+        ),
       ),
     );
   }
