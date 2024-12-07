@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:movie_app/config/theme/app_theme.dart';
 import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/config/service_container.dart';
-import 'package:movie_app/movies/presentation/pages/bottom_navigation.dart';
-import 'package:movie_app/movies/presentation/pages/movie_home_screen.dart';
+import 'package:movie_app/feature/movies/presentation/pages/bottom_navigation.dart';
 
 void main() {
   setup(); // Initialize dependency injection

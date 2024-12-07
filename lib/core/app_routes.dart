@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/movies/data/data_models/movie_models.dart';
-import 'package:movie_app/movies/domain/entity/movie_entity.dart';
-import 'package:movie_app/movies/domain/entity/tv_show_entity.dart';
-import 'package:movie_app/movies/presentation/pages/all_trending_movies.dart';
-import 'package:movie_app/movies/presentation/pages/all_tv_show.dart';
-import 'package:movie_app/movies/presentation/pages/all_upcoming_movies.dart';
-import 'package:movie_app/movies/presentation/pages/bottom_navigation.dart';
-import 'package:movie_app/movies/presentation/pages/movie_all_details.dart';
-import 'package:movie_app/movies/presentation/pages/search_results_screen.dart';
-import 'package:movie_app/movies/presentation/pages/show_details.dart';
+import 'package:movie_app/feature/movies/data/models/movie_models.dart';
+import 'package:movie_app/feature/movies/domain/entity/movie.dart';
+import 'package:movie_app/feature/tv_shows/domain/entities/tv_show_entity.dart';
+import 'package:movie_app/feature/movies/presentation/pages/all_trending_movies.dart';
+import 'package:movie_app/feature/tv_shows/presentation/pages/all_tv_show.dart';
+import 'package:movie_app/feature/movies/presentation/pages/all_upcoming_movies.dart';
+import 'package:movie_app/feature/movies/presentation/pages/bottom_navigation.dart';
+import 'package:movie_app/feature/movies/presentation/pages/movie_all_details.dart';
+import 'package:movie_app/feature/movies/presentation/pages/search_results_screen.dart';
+import 'package:movie_app/feature/tv_shows/presentation/pages/show_details.dart';
 
 class AppRoutes {
   static const String home = '/';
@@ -27,19 +27,19 @@ class AppRoutes {
         );
       case allTrendingMovies:
         // Pass the list of trending movies as arguments
-        final trendingMovies = settings.arguments as List<MovieEntity>;
+        final trendingMovies = settings.arguments as List<Movie>;
         return MaterialPageRoute(
           builder: (_) =>
               AllTrendingMoviesScreen(trendingMovies: trendingMovies),
         );
       case movieDetails:
-        final movie = settings.arguments as MovieEntity; // Retrieve the movie
+        final movie = settings.arguments as Movie; // Retrieve the movie
         return MaterialPageRoute(
           builder: (context) => MovieDetailsScreen(movie: movie),
         );
       case upcomingMovies:
         final upComingMovies =
-            settings.arguments as List<MovieEntity>; // Retrieve the movie
+            settings.arguments as List<Movie>; // Retrieve the movie
         return MaterialPageRoute(
           builder: (context) =>
               AllUpcomingMovies(upcomingMovies: upComingMovies),
@@ -55,7 +55,7 @@ class AppRoutes {
           builder: (context) => ShowDetailScreen(shows: shows),
         );
       case searchResult:
-        final results = settings.arguments as List<MovieEntity>;
+        final results = settings.arguments as List<Movie>;
         return MaterialPageRoute(
           builder: (context) => SearchResultsScreen(results: results),
         );
