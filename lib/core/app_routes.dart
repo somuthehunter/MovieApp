@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/feature/movies/data/models/movie_models.dart';
 import 'package:movie_app/feature/movies/domain/entity/movie.dart';
 import 'package:movie_app/feature/tv_shows/domain/entities/tv_show_entity.dart';
 import 'package:movie_app/feature/movies/presentation/pages/all_trending_movies.dart';
