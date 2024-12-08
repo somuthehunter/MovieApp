@@ -15,7 +15,7 @@ class TvShowBloc extends Bloc<TvShowEvent, TvShowState> {
       result.fold(
           (failure) => Utilities.emitError(
               failure, (message) => TvShowError(message), emit),
-          (result) => emit(TvShowDone(tvShows: result)));
+          (result) => emit(TvShowDone(tvShows: result.tvShows)));
     });
   }
 }

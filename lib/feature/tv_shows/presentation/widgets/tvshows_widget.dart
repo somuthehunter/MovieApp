@@ -37,7 +37,7 @@ class TvshowsWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Web Series',
+                            'TV Shows',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,

@@ -1,6 +1,6 @@
 import 'package:movie_app/core/network/api_client.dart';
 import 'package:movie_app/feature/tv_shows/data/data_sources/tv_show_remote_data_source.dart';
-import 'package:movie_app/feature/tv_shows/data/models/tv_show_model.dart';
+import 'package:movie_app/feature/tv_shows/data/models/tv_show_response_model.dart';
 
 class TvShowRemoteDataSourceImpl extends TvShowRemoteDataSource {
   final ApiClient client;
@@ -8,13 +8,13 @@ class TvShowRemoteDataSourceImpl extends TvShowRemoteDataSource {
   TvShowRemoteDataSourceImpl(this.client);
 
   @override
-  Future<List<TVShowModel>> getTvShows(String apiKey) async {
+  Future<TVShowResponseModel> getTvShows(String apiKey) async {
     final response = await client.get(
       'tv/popular',
       queryParameters: {
         'api_key': apiKey,
       },
     );
-    return TVShowModel.fromList(response);
+    return TVShowResponseModel.fromMap(response);
   }
 }

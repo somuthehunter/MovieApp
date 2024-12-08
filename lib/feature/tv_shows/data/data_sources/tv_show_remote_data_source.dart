@@ -1,5 +1,5 @@
-import 'package:movie_app/feature/tv_shows/data/models/tv_show_model.dart';
+import 'package:movie_app/feature/tv_shows/data/models/tv_show_response_model.dart';
 
 abstract class TvShowRemoteDataSource {
-  Future<List<TVShowModel>> getTvShows(String apiKey);
+  Future<TVShowResponseModel> getTvShows(String apiKey);
 }

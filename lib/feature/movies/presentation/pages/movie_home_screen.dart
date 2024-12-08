@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                     // For upcoming movies
                     UpComingMoviesWidget(),
                     // Showing here all the series
-                    //TvshowsWidget(),
+                    TvshowsWidget(),
                   ],
                 ),
               ),
