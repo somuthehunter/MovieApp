@@ -26,4 +26,34 @@ class TvshowsRepositoryImpl extends TvshowRepository {
       return Left(NoInternetException());
     }
   }
+
+  @override
+  ResultFuture<TVShowResponse> getTrendingTvShows(String apiKey) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final tvShowList =
+            await tvShowRemoteDataSource.getTrendingTvShows(apiKey);
+        return Right(tvShowList.toEntity());
+      } catch (e) {
+        return Left(Utilities.handleException(e));
+      }
+    } else {
+      return Left(NoInternetException());
+    }
+  }
+
+  @override
+  ResultFuture<TVShowResponse> getUpcomingTvShows(String apiKey) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final tvShowList =
+            await tvShowRemoteDataSource.getUpcomingTvShows(apiKey);
+        return Right(tvShowList.toEntity());
+      } catch (e) {
+        return Left(Utilities.handleException(e));
+      }
+    } else {
+      return Left(NoInternetException());
+    }
+  }
 }

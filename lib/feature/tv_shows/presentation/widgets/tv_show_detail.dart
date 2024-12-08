@@ -3,16 +3,17 @@ import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/core/constants/constant.dart';
 import 'package:movie_app/feature/tv_shows/domain/entities/tv_show_entity.dart';
 
-class AllTvShows extends StatelessWidget {
+class TVShowDetail extends StatelessWidget {
   final List<TVShow> show;
+  final String pageTitle;
 
-  const AllTvShows({super.key, required this.show});
+  const TVShowDetail({super.key, required this.show, required this.pageTitle});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("All Web Series"),
+        title: Text(pageTitle),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

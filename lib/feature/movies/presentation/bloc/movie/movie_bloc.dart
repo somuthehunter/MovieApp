@@ -13,7 +13,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   /// To keep track of favorite movies
   final List<Movie> _favoriteMovies = [];
 
-  MovieBloc(this.getMoviesUsecase) : super(MovieLoading()) {
+  MovieBloc(this.getMoviesUsecase) : super(MovieInitial()) {
     on<GetMovies>((event, emit) async {
       emit(MovieLoading());
       final result = await getMoviesUsecase.getMovies(apiKey);

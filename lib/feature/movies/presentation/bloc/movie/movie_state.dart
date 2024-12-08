@@ -6,6 +6,8 @@ abstract class MovieState extends Equatable {
   List<Object?> get props => [];
 }
 
+class MovieInitial extends MovieState {}
+
 class MovieLoading extends MovieState {}
 
 class MovieDone extends MovieState {

@@ -10,4 +10,12 @@ class GetTvshowsUsecase {
   ResultFuture<TVShowResponse> getTvshows(String apiKey) {
     return repository.getTvShows(apiKey);
   }
+
+  ResultFuture<TVShowResponse> getTrendingTvShows(String apiKey) {
+    return repository.getTrendingTvShows(apiKey);
+  }
+
+  ResultFuture<TVShowResponse> getUpcomingTvShows(String apiKey) {
+    return repository.getUpcomingTvShows(apiKey);
+  }
 }

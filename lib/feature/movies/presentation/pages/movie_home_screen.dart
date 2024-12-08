@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/config/theme/app_colors.dart';
+import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/feature/movies/presentation/widgets/movie_carousel_widget.dart'; // Import MovieCarouselWidget
 import 'package:movie_app/feature/movies/presentation/widgets/trending_movies_widget.dart';
+import 'package:movie_app/feature/tv_shows/presentation/widgets/trending_tv_shows.dart';
 import 'package:movie_app/feature/tv_shows/presentation/widgets/tvshows_widget.dart';
-import 'package:movie_app/feature/movies/presentation/widgets/upcoming_movie_section.dart'; // Import TrendingMoviesWidget
+import 'package:movie_app/feature/movies/presentation/widgets/upcoming_movie_section.dart';
+import 'package:movie_app/feature/tv_shows/presentation/widgets/upcoming_tv_show_widget.dart'; // Import TrendingMoviesWidget
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -22,6 +25,7 @@ class HomeScreen extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
+            // Header
             Container(
               height: 100,
               color: AppColors.primary,
@@ -36,57 +40,83 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // Drawer items for navigation
-            ListTile(
-              leading: const Icon(Icons.movie),
-              title: const Text('Movies'),
-              onTap: () {
-                // Close the drawer and navigate to the MovieScreen widget
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
-              },
+            // Expandable Movies Section
+            ExpansionTile(
+              iconColor: AppColors.white,
+              leading: const Icon(Icons.movie, color: AppColors.white),
+              title: const Text(
+                'Movies',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.trending_up),
+                  title: const Text('Trending Movies'),
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TrendingMoviesWidget(
+                                isTrendingMoviePage: true)));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.upcoming),
+                  title: const Text('Upcoming Movies'),
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UpComingMoviesWidget(
+                            isUpcomingMoviePage: true),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.trending_up),
-              title: const Text('Trending Movies'),
-              onTap: () {
-                // Close the drawer and navigate to the TrendingMoviesWidget
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TrendingMoviesWidget()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.tv),
-              title: const Text('TV Shows'),
-              onTap: () {
-                // Close the drawer and navigate to the TvshowsWidget
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TvshowsWidget()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.upcoming),
-              title: const Text('Upcoming Movies'),
-              onTap: () {
-                // Close the drawer and navigate to the UpComingMoviesWidget
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const UpComingMoviesWidget()),
-                );
-              },
+            // Expandable TV Shows Section
+            ExpansionTile(
+              iconColor: AppColors.white,
+              leading: const Icon(
+                Icons.tv,
+                color: AppColors.white,
+              ),
+              title: const Text(
+                'TV Shows',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.trending_up),
+                  title: const Text('Trending TV Shows'),
+                  onTap: () {
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const TrendingTvShowsWidget(),
+                    //   ),
+                    // );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.upcoming),
+                  title: const Text('Upcoming TV Shows'),
+                  onTap: () {
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const UpcomingTvShowsWidget(),
+                    //   ),
+                    // );
+                  },
+                ),
+              ],
             ),
           ],
         ),
       ),
+
       body: SafeArea(
         child: Stack(
           children: [
@@ -104,6 +134,8 @@ class HomeScreen extends StatelessWidget {
                     UpComingMoviesWidget(),
                     // Showing here all the series
                     TvshowsWidget(),
+                    TrendingTvShows(),
+                    UpcomingTvShowWidget()
                   ],
                 ),
               ),

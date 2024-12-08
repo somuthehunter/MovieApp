@@ -7,9 +7,11 @@ import 'package:movie_app/core/utilities/utilities.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/movie/movie_bloc.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/movie/movie_event.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/movie/movie_state.dart';
+import 'package:movie_app/feature/movies/presentation/widgets/movie_detail.dart';
 
 class UpComingMoviesWidget extends StatelessWidget {
-  const UpComingMoviesWidget({super.key});
+  final bool isUpcomingMoviePage;
+  const UpComingMoviesWidget({super.key, this.isUpcomingMoviePage = false});
 
   @override
   Widget build(BuildContext context) {
@@ -20,64 +22,74 @@ class UpComingMoviesWidget extends StatelessWidget {
         builder: (context, state) {
           switch (state) {
             case MovieLoading _:
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child:
-                    Utilities.showLoadingBanner(context: context, height: 180),
-              );
-            case MovieDone _:
-              if (state.upComingMovies.isEmpty) {
-                return const Center(
-                    child: Text('No upcoming movies available'));
-              }
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 5.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
+              return isUpcomingMoviePage
+                  ? Utilities.showGridLoading()
+                  : Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Upcoming Movies',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      child: Utilities.showLoadingBanner(
+                          context: context, height: 180),
+                    );
+            case MovieDone _:
+              return isUpcomingMoviePage
+                  ? state.upComingMovies.isEmpty
+                      ? const Center(
+                          child: Text('No upcoming movies available'))
+                      : MovieDetail(
+                          movies: state.upComingMovies,
+                          pageTitle: "Upcoming Movies")
+                  : state.upComingMovies.isEmpty
+                      ? const Center(
+                          child: Text('No upcoming movies available'))
+                      : Padding(
+                          padding: const EdgeInsets.only(bottom: 5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Upcoming Movies',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                            context, AppRoutes.upcomingMovies,
+                                            arguments: state
+                                                .upComingMovies); // Navigates to the details screen
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        side: const BorderSide(
+                                            color: AppColors.primary),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: AppColors.primary,
+                                      ),
+                                      child: const Text('See Details'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: state.upComingMovies.map((movie) {
+                                    return Utilities.buildThumbnail(
+                                        context: context,
+                                        movie:
+                                            movie); // Builds movie thumbnails
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.upcomingMovies,
-                                  arguments: state
-                                      .upComingMovies); // Navigates to the details screen
-                            },
-                            style: ElevatedButton.styleFrom(
-                              side: const BorderSide(color: AppColors.primary),
-                              backgroundColor: Colors.transparent,
-                              foregroundColor: AppColors.primary,
-                            ),
-                            child: const Text('See Details'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: state.upComingMovies.map((movie) {
-                          return Utilities.buildThumbnail(
-                              context: context,
-                              movie: movie); // Builds movie thumbnails
-                        }).toList(),
-                      ),
-                    ),
-                  ],
-                ),
-              );
+                        );
             case MovieError _:
               return Center(child: Text('Error: ${state.error}'));
             default:

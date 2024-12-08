@@ -1,31 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/core/constants/constant.dart';
 import 'package:movie_app/feature/movies/domain/entity/movie.dart';
+import 'package:movie_app/feature/tv_shows/domain/entities/tv_show_entity.dart';
 
-class MovieDetailsScreen extends StatelessWidget {
-  final Movie movie;
+class MovieOrTVShowDetailsScreen extends StatelessWidget {
+  final dynamic show;
 
-  MovieDetailsScreen({required this.movie});
+  const MovieOrTVShowDetailsScreen({super.key, required this.show});
 
   @override
   Widget build(BuildContext context) {
+    String title = '';
+    String? posterLink = '';
+    String voteAverage = '';
+    String originalLanguage = '';
+    String voteCount;
+    String overView = '';
+    String releaseDate;
+    if (show is Movie) {
+      Movie s = show as Movie;
+      title = s.title;
+      posterLink = s.backdropPath;
+      voteAverage = s.voteAverage.toString();
+      voteCount = s.voteCount.toString();
+      originalLanguage = s.originalLanguage;
+      overView = s.overview;
+      releaseDate = s.releaseDate;
+    } else {
+      TVShow s = show as TVShow;
+      title = s.name;
+      posterLink = s.backdropPath;
+      voteAverage = s.voteAverage.toString();
+      voteCount = s.voteCount.toString();
+      originalLanguage = s.originalLanguage.toUpperCase();
+      overView = s.overview;
+      releaseDate = s.firstAirDate;
+    }
     return Scaffold(
-      appBar: AppBar(title: Text(movie.title)),
+      appBar: AppBar(title: Text(title)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                '${basePosterUrl}${movie.backdropPath}',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 250,
-              ),
-            ),
-            SizedBox(height: 16.0),
+            posterLink != null && posterLink.isNotEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      '$basePosterUrl$posterLink',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 250,
+                    ),
+                  )
+                : const Center(
+                    child: SizedBox(
+                      height: 250,
+                      child: Icon(Icons.image),
+                    ),
+                  ),
+            const SizedBox(height: 16.0),
 
             // Row for Rating, Language, and Vote Count
             Row(
@@ -33,54 +67,54 @@ class MovieDetailsScreen extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Icon(Icons.star, color: Colors.amber, size: 30),
-                    SizedBox(height: 4),
+                    const Icon(Icons.star, color: Colors.amber, size: 30),
+                    const SizedBox(height: 4),
                     Text(
-                      movie.voteAverage.toString(),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      voteAverage,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
                 Column(
                   children: [
                     Icon(Icons.language, color: Colors.grey[600], size: 30),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
-                      movie.originalLanguage.toUpperCase(),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      originalLanguage,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
                 Column(
                   children: [
                     Icon(Icons.how_to_vote, color: Colors.grey[600], size: 30),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
-                      movie.voteCount.toString(),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      voteCount,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ],
             ),
 
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(
-              movie.title,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
-              "Overview of the Movie : ${movie.overview}",
-              style: TextStyle(fontSize: 16),
+              "Overview of the Movie : $overView",
+              style: const TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 8.0),
-            Text("Release Date: ${movie.releaseDate}"),
-            SizedBox(height: 8.0),
-            Text("Ratings: ${movie.voteAverage}"),
+            const SizedBox(height: 8.0),
+            Text("Release Date: $releaseDate"),
+            const SizedBox(height: 8.0),
+            Text("Ratings: $voteAverage"),
           ],
         ),
       ),

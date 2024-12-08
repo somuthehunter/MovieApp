@@ -74,6 +74,21 @@ class Utilities {
     }
   }
 
+  static Widget showGridLoading() => GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // Two posters in a row
+          childAspectRatio: 0.6, // Adjust the aspect ratio as needed
+          crossAxisSpacing: 16.0, // Space between columns
+          mainAxisSpacing: 16.0, // Space between rows
+        ),
+        itemCount: 8,
+        itemBuilder: (context, index) {
+          return ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: buildShimmerEffect(height: 180, width: 120));
+        },
+      );
+
   static void emitError<T extends Exception, S>(
       T failure, S Function(String) createErrorState, Emitter<S> emit) {
     String errorMessage;

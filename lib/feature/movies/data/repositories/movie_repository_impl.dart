@@ -4,9 +4,6 @@ import 'package:movie_app/core/network/network_info.dart';
 import 'package:movie_app/core/typedef/typedef.dart';
 import 'package:movie_app/core/utilities/utilities.dart';
 import 'package:movie_app/feature/movies/data/data_sources/movie_remote_data_source.dart';
-import 'package:movie_app/feature/movies/data/models/movie_models.dart';
-import 'package:movie_app/feature/movies/data/models/movie_response_model.dart';
-import 'package:movie_app/feature/movies/domain/entity/movie.dart';
 import 'package:movie_app/feature/movies/domain/entity/movie_response.dart';
 import 'package:movie_app/feature/movies/domain/repository/movie_repository.dart';
 

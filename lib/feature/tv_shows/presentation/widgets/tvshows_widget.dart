@@ -19,7 +19,11 @@ class TvshowsWidget extends StatelessWidget {
         builder: (context, state) {
           switch (state) {
             case TvShowLoading _:
-              return const Center(child: CircularProgressIndicator());
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Utilities.showLoadingBanner(context: context, height: 180),
+              );
+
             case TvShowDone _:
               if (state.tvShows.isEmpty) {
                 return const Center(

@@ -17,5 +17,21 @@ class TvShowBloc extends Bloc<TvShowEvent, TvShowState> {
               failure, (message) => TvShowError(message), emit),
           (result) => emit(TvShowDone(tvShows: result.tvShows)));
     });
+    on<GetTrendingTvShows>((event, emit) async {
+      emit(TvShowLoading());
+      final result = await getTVShowsUsecase.getTrendingTvShows(apiKey);
+      result.fold(
+          (failure) => Utilities.emitError(
+              failure, (message) => TvShowError(message), emit),
+          (result) => emit(TvShowDone(tvShows: result.tvShows)));
+    });
+    on<GetUpcomingTvShows>((event, emit) async {
+      emit(TvShowLoading());
+      final result = await getTVShowsUsecase.getUpcomingTvShows(apiKey);
+      result.fold(
+          (failure) => Utilities.emitError(
+              failure, (message) => TvShowError(message), emit),
+          (result) => emit(TvShowDone(tvShows: result.tvShows)));
+    });
   }
 }

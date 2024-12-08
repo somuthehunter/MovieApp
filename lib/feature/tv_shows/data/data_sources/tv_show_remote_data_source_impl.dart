@@ -17,4 +17,26 @@ class TvShowRemoteDataSourceImpl extends TvShowRemoteDataSource {
     );
     return TVShowResponseModel.fromMap(response);
   }
+
+  @override
+  Future<TVShowResponseModel> getTrendingTvShows(String apiKey) async {
+    final response = await client.get(
+      'trending/tv/day',
+      queryParameters: {
+        'api_key': apiKey,
+      },
+    );
+    return TVShowResponseModel.fromMap(response);
+  }
+
+  @override
+  Future<TVShowResponseModel> getUpcomingTvShows(String apiKey) async {
+    final response = await client.get(
+      'tv/airing_today',
+      queryParameters: {
+        'api_key': apiKey,
+      },
+    );
+    return TVShowResponseModel.fromMap(response);
+  }
 }

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/feature/movies/domain/entity/movie.dart';
 import 'package:movie_app/feature/tv_shows/domain/entities/tv_show_entity.dart';
 import 'package:movie_app/feature/movies/presentation/pages/all_trending_movies.dart';
-import 'package:movie_app/feature/tv_shows/presentation/pages/all_tv_show.dart';
+import 'package:movie_app/feature/tv_shows/presentation/pages/all_trending_series.dart';
+import 'package:movie_app/feature/tv_shows/presentation/pages/all_upcoming_series.dart';
 import 'package:movie_app/feature/movies/presentation/pages/all_upcoming_movies.dart';
 import 'package:movie_app/feature/movies/presentation/pages/bottom_navigation.dart';
 import 'package:movie_app/feature/movies/presentation/pages/movie_all_details.dart';
-import 'package:movie_app/feature/movies/presentation/pages/search_results_screen.dart';
-import 'package:movie_app/feature/tv_shows/presentation/pages/show_details.dart';
+import 'package:movie_app/feature/tv_shows/presentation/pages/all_tv_shows.dart';
 
 class AppRoutes {
   static const String home = '/';
@@ -17,6 +17,8 @@ class AppRoutes {
   static const String allWebSeries = '/all-web-series';
   static const String webSeriesDetails = '/series-details';
   static const String searchResult = '/search-results';
+  static const String allUpcomingSeries = '/all-upcoming-series';
+  static const String allTrendingSeries = '/all-trending-series';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -32,9 +34,9 @@ class AppRoutes {
               AllTrendingMoviesScreen(trendingMovies: trendingMovies),
         );
       case movieDetails:
-        final movie = settings.arguments as Movie; // Retrieve the movie
+        final show = settings.arguments;
         return MaterialPageRoute(
-          builder: (context) => MovieDetailsScreen(movie: movie),
+          builder: (context) => MovieOrTVShowDetailsScreen(show: show),
         );
       case upcomingMovies:
         final upComingMovies =
@@ -46,18 +48,19 @@ class AppRoutes {
       case allWebSeries:
         final show = settings.arguments as List<TVShow>;
         return MaterialPageRoute(
-          builder: (context) => AllTvShows(show: show),
+          builder: (context) => AllTVShows(shows: show),
         );
-      case webSeriesDetails:
-        final shows = settings.arguments as TVShow;
+      case allTrendingSeries:
+        final show = settings.arguments as List<TVShow>;
         return MaterialPageRoute(
-          builder: (context) => ShowDetailScreen(shows: shows),
+          builder: (context) => AllTrendinTVShows(shows: show),
         );
-      case searchResult:
-        final results = settings.arguments as List<Movie>;
+      case allUpcomingSeries:
+        final show = settings.arguments as List<TVShow>;
         return MaterialPageRoute(
-          builder: (context) => SearchResultsScreen(results: results),
+          builder: (context) => AllUpcomingSeries(shows: show),
         );
+     
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

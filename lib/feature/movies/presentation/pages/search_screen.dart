@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/config/service_container.dart';
+import 'package:movie_app/config/theme/app_colors.dart';
 import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/core/constants/constant.dart';
+import 'package:movie_app/feature/movies/domain/entity/movie.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/movie/movie_bloc.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/movie/movie_event.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/movie/movie_state.dart';
-import 'package:movie_app/feature/movies/domain/entity/movie.dart';
 
 class SearchScreen extends StatelessWidget {
   SearchScreen({super.key});
@@ -29,35 +30,61 @@ class SearchScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Search bar
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _searchController,
-                onChanged: (query) {
-                  if (query.isNotEmpty) {
-                    context.read<MovieBloc>().add(SearchMovies(query: query));
-                  }
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Search for a movie...',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            // Results display
-            Expanded(
-              child: BlocProvider(
-                create: (context) => getIt<MovieBloc>(),
+      body: BlocProvider(
+        create: (context) => getIt<MovieBloc>(),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Search bar
+              Builder(builder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    cursorColor: AppColors.primary,
+                    controller: _searchController,
+                    onChanged: (query) {
+                      if (query.isNotEmpty) {
+                        context
+                            .read<MovieBloc>()
+                            .add(SearchMovies(query: query));
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Search for a movie...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Optional: Adds rounded corners
+                        borderSide: const BorderSide(
+                          color: Colors.grey, // Default border color
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: AppColors.primary, // Border color when focused
+                          width: 2.0, // Optional: Border width when focused
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: Colors.grey, // Border color when not focused
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+              // Results display
+              Expanded(
                 child: BlocBuilder<MovieBloc, MovieState>(
                   builder: (context, state) {
                     if (state is MovieLoading) {
                       return const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                        ),
                       );
                     } else if (state is MovieSearchError) {
                       return Center(
@@ -90,8 +117,8 @@ class SearchScreen extends StatelessWidget {
                   },
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -100,7 +127,7 @@ class SearchScreen extends StatelessWidget {
   // Widget to build each movie item
   Widget _buildMovieItem(BuildContext context, Movie movie) {
     return ListTile(
-      leading: movie.posterPath != null
+      leading: movie.posterPath.isNotEmpty
           ? ClipRRect(
               borderRadius:
                   BorderRadius.circular(8.0), // Optional: Adds rounded corners
