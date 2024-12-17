@@ -31,10 +31,6 @@ class GetMoviesUsecase {
   // ResultFuture<List<MovieEntity>> getFavoriteMovies() =>
   //     repository.getFavoriteMovies();
 
-  // // Add to Favorites
-  // ResultFuture<void> addMovieToFavorites(MovieEntity movie) =>
-  //     repository.addMovieToFavorites(movie);
-
   // // Remove from Favorites
   // ResultFuture<void> removeMovieFromFavorites(MovieEntity movie) =>
   //     repository.removeMovieFromFavorites(movie);

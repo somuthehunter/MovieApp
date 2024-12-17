@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/config/theme/app_colors.dart';
-import 'package:movie_app/core/app_routes.dart';
 import 'package:movie_app/feature/movies/presentation/widgets/movie_carousel_widget.dart'; // Import MovieCarouselWidget
 import 'package:movie_app/feature/movies/presentation/widgets/trending_movies_widget.dart';
 import 'package:movie_app/feature/tv_shows/presentation/widgets/trending_tv_shows.dart';

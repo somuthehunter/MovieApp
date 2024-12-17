@@ -8,15 +8,16 @@ class MovieResponseModel extends MovieResponse {
       required super.totalPages,
       required super.totalResults});
 
-  factory MovieResponseModel.fromMap(Map<String, dynamic> map) =>
-      MovieResponseModel(
-          page: map['page'],
-          movies: MovieModel.fromList(
-              List<Map<String, dynamic>>.from(map['results'])),
-          totalPages: map['total_pages'],
-          totalResults: map['total_results']);
+  factory MovieResponseModel.fromMap(Map<String, dynamic> map) {
+    return MovieResponseModel(
+        page: map['page'],
+        movies: MovieModel.toEntityList(MovieModel.fromList(
+            List<Map<String, dynamic>>.from(map['results']))),
+        totalPages: map['total_pages'],
+        totalResults: map['total_results']);
+  }
 
-   MovieResponse toEntity() => MovieResponse(
+  MovieResponse toEntity() => MovieResponse(
       page: page,
       movies: movies,
       totalPages: totalPages,

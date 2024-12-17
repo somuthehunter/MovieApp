@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/config/theme/app_colors.dart';
+import 'package:movie_app/core/utilities/local_storage.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/navigation/navigation_bloc.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/navigation/navigation_event.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/navigation/navigation_state.dart';
-import 'package:movie_app/feature/movies/presentation/pages/favourite_movies_screen.dart';
+import 'package:movie_app/feature/favourite/presentation/pages/favourite_movies_screen.dart';
 import 'package:movie_app/feature/movies/presentation/pages/movie_home_screen.dart';
 import 'package:movie_app/feature/movies/presentation/pages/search_screen.dart';
 
@@ -19,6 +20,7 @@ class BottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LocalStorage.create();
     return BlocProvider(
       create: (_) => NavigationBloc(),
       child: Scaffold(

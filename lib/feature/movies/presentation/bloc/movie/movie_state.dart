@@ -55,21 +55,3 @@ class MovieSearchError extends MovieState {
 }
 
 class FavoriteMoviesLoadingState extends MovieState {}
-
-class FavoriteMoviesLoadedState extends MovieState {
-  final List<Movie> favoriteMovies;
-
-  FavoriteMoviesLoadedState(this.favoriteMovies);
-
-  @override
-  List<Object?> get props => [favoriteMovies];
-}
-
-class FavoriteMoviesErrorState extends MovieState {
-  final String error;
-
-  FavoriteMoviesErrorState(this.error);
-
-  @override
-  List<Object?> get props => [error];
-}

@@ -11,6 +11,5 @@ abstract class MovieRepository {
 
   //handle favourite movies
   // ResultFuture<List<MovieEntity>> getFavoriteMovies();
-  // ResultFuture<void> addMovieToFavorites(MovieEntity movie);
   // ResultFuture<void> removeMovieFromFavorites(MovieEntity movie);
 }

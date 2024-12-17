@@ -2,16 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/core/constants/constant.dart';
 import 'package:movie_app/core/utilities/debounce.dart';
 import 'package:movie_app/core/utilities/utilities.dart';
-import 'package:movie_app/feature/movies/domain/entity/movie.dart';
 import 'package:movie_app/feature/movies/domain/usecases/get_movies_usecase.dart';
 import 'movie_event.dart';
 import 'movie_state.dart';
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final GetMoviesUsecase getMoviesUsecase;
-
-  /// To keep track of favorite movies
-  final List<Movie> _favoriteMovies = [];
 
   MovieBloc(this.getMoviesUsecase) : super(MovieInitial()) {
     on<GetMovies>((event, emit) async {
@@ -59,6 +55,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
               failure, (message) => MovieError(message), emit),
           (result) => emit(MovieSearchSuccess(result.movies)));
     }, transformer: debounce(const Duration(milliseconds: 500)));
+
     // Define event handlers
     //   on<GetMovies>((event, emit) => _fetchMovies(emit),
     //       transformer: debounce(const Duration(milliseconds: 500)));
@@ -133,7 +130,6 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     //   _emitUpdatedState(emit);
     // }
 
-    // /// Emit updated state with the current favorite movies
     // void _emitUpdatedState(Emitter<MovieState> emit) {
     //   print("Current Favorites: $_favoriteMovies");
     //   if (state is MovieDone) {

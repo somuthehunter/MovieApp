@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/config/service_container.dart';
-import 'package:movie_app/core/constants/constant.dart';
-import 'package:movie_app/core/utilities/logger.dart';
 import 'package:movie_app/core/utilities/utilities.dart';
+import 'package:movie_app/feature/favourite/presentation/bloc/favourite_bloc.dart';
+import 'package:movie_app/feature/favourite/presentation/bloc/favourite_event.dart';
+import 'package:movie_app/feature/favourite/presentation/bloc/favourite_state.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/movie/movie_bloc.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/movie/movie_event.dart';
 import 'package:movie_app/feature/movies/presentation/bloc/movie/movie_state.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:movie_app/feature/movies/domain/entity/movie.dart';
+import 'package:movie_app/feature/movies/presentation/widgets/movie_corousel_element.dart';
 
 class MovieCarouselWidget extends StatelessWidget {
   const MovieCarouselWidget({super.key});
@@ -52,78 +54,47 @@ class MovieCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    return SizedBox(
-      height: screenHeight * 0.5, // Set the height explicitly here
-      child: CarouselSlider.builder(
-        itemCount: movies.length,
-        itemBuilder: (context, index, realIndex) {
-          final movie = movies[index];
-          return GestureDetector(
-            onTap: () {
-              // Navigate to movie details page
-              Navigator.pushNamed(context, '/all-movie-details',
-                  arguments: movie);
-            },
-            onDoubleTap: () {
-              // Add to favorites on double-tap
-              context.read<MovieBloc>().add(AddToFavourites(movie: movie));
-              Logger.info("Added to The Favourites : $movie");
-            },
-            child: Stack(
-              key: ValueKey(movie.id),
-              children: [
-                // Movie Poster
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    '$basePosterUrl${movie.posterPath}',
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Utilities.buildShimmerEffect(
-                          height: screenHeight * 0.5);
-                    },
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Center(child: Icon(Icons.broken_image)),
-                  ),
-                ),
+    // Track favorite movies by their IDs
 
-                // Favorite Icon (Love Icon) on top right
-                Positioned(
-                  top: 40,
-                  left: 10,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.favorite,
-                      color: context.read<MovieBloc>().state is MovieDone &&
-                              (context.read<MovieBloc>().state as MovieDone)
-                                  .favoriteMovies
-                                  .contains(movie)
-                          ? Colors.red // Show red if it's a favorite
-                          : Colors.grey, // Otherwise, show grey
-                    ),
-                    iconSize: 30,
-                    onPressed: () {
-                      // Add to favorites on icon tap
-                      context
-                          .read<MovieBloc>()
-                          .add(AddToFavourites(movie: movie));
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
+    double screenHeight = MediaQuery.of(context).size.height;
+    List<Movie> favMovies = [];
+    return BlocProvider(
+      create: (context) => getIt<FavouriteBloc>()..add(GetFavourite()),
+      child: BlocListener<FavouriteBloc, FavouriteState>(
+        listener: (context, state) {
+          if (state is FavouriteMovieLoaded) {
+            favMovies = state.favoriteMovies;
+          }
         },
-        options: CarouselOptions(
-          height: screenHeight * 0.5, // Keep height in CarouselOptions too
-          autoPlay: true,
-          enlargeCenterPage: true,
-          aspectRatio: 2.0,
-          autoPlayInterval: const Duration(seconds: 5),
+        child: SizedBox(
+          height: screenHeight * 0.5,
+          child: CarouselSlider.builder(
+            itemCount: movies.length,
+            itemBuilder: (context, index, realIndex) {
+              final movie = movies[index];
+              return GestureDetector(
+                  onTap: () {
+                    // Navigate to movie details page
+                    Navigator.pushNamed(context, '/all-movie-details',
+                        arguments: movie);
+                  },
+                  onDoubleTap: () {
+                    // Add to favorites on double-tap
+                    context
+                        .read<FavouriteBloc>()
+                        .add(AddToFavourite(movie: movie));
+                  },
+                  child:
+                      MovieCorouselElement(movie: movie, favMovies: favMovies));
+            },
+            options: CarouselOptions(
+              height: screenHeight * 0.5,
+              autoPlay: true,
+              enlargeCenterPage: true,
+              aspectRatio: 2.0,
+              autoPlayInterval: const Duration(seconds: 5),
+            ),
+          ),
         ),
       ),
     );

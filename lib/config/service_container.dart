@@ -3,6 +3,13 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:movie_app/core/network/api_client.dart';
 import 'package:movie_app/core/network/network_info.dart';
+import 'package:movie_app/feature/favourite/data/data_sources/favourite_local_data_sources.dart';
+import 'package:movie_app/feature/favourite/data/data_sources/favourite_local_data_sources_impl.dart';
+import 'package:movie_app/feature/favourite/data/repositories/favourite_repository_impl.dart';
+import 'package:movie_app/feature/favourite/domain/repositories/favourite_repository.dart';
+import 'package:movie_app/feature/favourite/domain/usecases/add_to_favourite.dart';
+import 'package:movie_app/feature/favourite/domain/usecases/get_favourite_use_cases.dart';
+import 'package:movie_app/feature/favourite/presentation/bloc/favourite_bloc.dart';
 import 'package:movie_app/feature/movies/data/data_sources/movie_remote_data_source.dart';
 import 'package:movie_app/feature/tv_shows/data/data_sources/tv_show_remote_data_source.dart';
 import 'package:movie_app/feature/tv_shows/data/data_sources/tv_show_remote_data_source_impl.dart';
@@ -56,5 +63,22 @@ void setup() {
   //bloc
   getIt.registerFactory<TvShowBloc>(
     () => TvShowBloc(getIt<GetTvshowsUsecase>()),
+  );
+
+  //-------------------------------------------------------------------------------------
+  // Feature: Favourite
+  // data source
+  getIt.registerLazySingleton<FavouriteLocalDataSources>(
+      () => FavouriteLocalDataSourcesImpl());
+  // repository
+  getIt.registerLazySingleton<FavouriteRepository>(
+      () => FavouriteRepositoryImpl(getIt()));
+  // usecase
+  getIt.registerLazySingleton(() => AddToFavouriteUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetFavouriteUseCase(getIt()));
+  //bloc
+  getIt.registerFactory<FavouriteBloc>(
+    () => FavouriteBloc(
+        getIt<AddToFavouriteUseCase>(), getIt<GetFavouriteUseCase>()),
   );
 }
