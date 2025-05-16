@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/movies/data/data_models/movie_models.dart';
-import 'package:movie_app/movies/domain/entity/movie_entity.dart';
-import 'package:movie_app/movies/domain/entity/tv_show_entity.dart';
-import 'package:movie_app/movies/presentation/pages/all_trending_movies.dart';
-import 'package:movie_app/movies/presentation/pages/all_tv_show.dart';
-import 'package:movie_app/movies/presentation/pages/all_upcoming_movies.dart';
-import 'package:movie_app/movies/presentation/pages/bottomNavigation.dart';
-import 'package:movie_app/movies/presentation/pages/movie_all_details.dart';
-import 'package:movie_app/movies/presentation/pages/search_results_screen.dart';
-import 'package:movie_app/movies/presentation/pages/show_details.dart';
+import 'package:movie_app/feature/movies/domain/entity/movie.dart';
+import 'package:movie_app/feature/tv_shows/domain/entities/tv_show_entity.dart';
+import 'package:movie_app/feature/movies/presentation/pages/all_trending_movies.dart';
+import 'package:movie_app/feature/tv_shows/presentation/pages/all_trending_series.dart';
+import 'package:movie_app/feature/tv_shows/presentation/pages/all_upcoming_series.dart';
+import 'package:movie_app/feature/movies/presentation/pages/all_upcoming_movies.dart';
+import 'package:movie_app/feature/movies/presentation/pages/bottom_navigation.dart';
+import 'package:movie_app/feature/movies/presentation/pages/movie_all_details.dart';
+import 'package:movie_app/feature/tv_shows/presentation/pages/all_tv_shows.dart';
 
 class AppRoutes {
   static const String home = '/';
@@ -18,28 +17,30 @@ class AppRoutes {
   static const String allWebSeries = '/all-web-series';
   static const String webSeriesDetails = '/series-details';
   static const String searchResult = '/search-results';
+  static const String allUpcomingSeries = '/all-upcoming-series';
+  static const String allTrendingSeries = '/all-trending-series';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case home:
         return MaterialPageRoute(
-          builder: (_) => Navigation(),
+          builder: (_) => BottomNavigation(),
         );
       case allTrendingMovies:
         // Pass the list of trending movies as arguments
-        final trendingMovies = settings.arguments as List<MovieEntity>;
+        final trendingMovies = settings.arguments as List<Movie>;
         return MaterialPageRoute(
           builder: (_) =>
               AllTrendingMoviesScreen(trendingMovies: trendingMovies),
         );
       case movieDetails:
-        final movie = settings.arguments as MovieEntity; // Retrieve the movie
+        final show = settings.arguments;
         return MaterialPageRoute(
-          builder: (context) => MovieDetailsScreen(movie: movie),
+          builder: (context) => MovieOrTVShowDetailsScreen(show: show),
         );
       case upcomingMovies:
         final upComingMovies =
-            settings.arguments as List<MovieEntity>; // Retrieve the movie
+            settings.arguments as List<Movie>; // Retrieve the movie
         return MaterialPageRoute(
           builder: (context) =>
               AllUpcomingMovies(upcomingMovies: upComingMovies),
@@ -47,18 +48,19 @@ class AppRoutes {
       case allWebSeries:
         final show = settings.arguments as List<TVShow>;
         return MaterialPageRoute(
-          builder: (context) => AllTvShows(show: show),
+          builder: (context) => AllTVShows(shows: show),
         );
-      case webSeriesDetails:
-        final shows = settings.arguments as TVShow;
+      case allTrendingSeries:
+        final show = settings.arguments as List<TVShow>;
         return MaterialPageRoute(
-          builder: (context) => ShowDetailScreen(shows: shows),
+          builder: (context) => AllTrendinTVShows(shows: show),
         );
-      case searchResult:
-        final results = settings.arguments as List<MovieEntity>;
+      case allUpcomingSeries:
+        final show = settings.arguments as List<TVShow>;
         return MaterialPageRoute(
-          builder: (context) => SearchResultsScreen(results: results),
+          builder: (context) => AllUpcomingSeries(shows: show),
         );
+     
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
